@@ -150,7 +150,7 @@ void Quadrocopter::processMotors()
     if(MController->getForce() >= MINIMUM_FLYING_THROTTLE)
         flyingTime += dt;
     if(flyingTime >= MINIMUM_FLYING_TIME)
-        flying = 1;
+        flying = true;
 
     MController->setTorque(getTorques());
 }

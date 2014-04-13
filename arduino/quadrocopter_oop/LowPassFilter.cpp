@@ -1,4 +1,4 @@
-#include <Arduino.h>
+//#include <Arduino.h>
 #include "LowPassFilter.h"
 #include "Definitions.h"
 
@@ -6,9 +6,9 @@
 #define LOWPASSFILTER_CPP
 
 template <typename T> LowPassFilter<T>::LowPassFilter()
+ : period(0)
 {
-    reset();
-    period = 0;
+    initialiseLPF();
 }
 
 template <typename T> LowPassFilter<T>::LowPassFilter(double nPeriod)
@@ -47,7 +47,7 @@ template <typename T> double LowPassFilter<T>::getAlpha(double dt)
     return(dt / (dt + period / (2 * MPI)));
 }
 
-template <typename T> inline void LowPassFilter<T>::reset()
+template <typename T> inline void LowPassFilter<T>::initialiseLPF()
 {
     value = 0;
 }

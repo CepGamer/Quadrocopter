@@ -49,15 +49,15 @@ private:
 
     RVector3D angleManualCorrection;
 
-    static const double DefaultVSensorMaxVoltage = 17.95; //maximal voltage (before voltage divider)
+    static const double DefaultVSensorMaxVoltage = 17.95;   //maximal voltage (before voltage divider)
     //15.16? 11.95->2.6
 
-    static const double g = 9.80665; // gravitational acceleration
+    static const double g = 9.80665;    // gravitational acceleration
 
     //physical quantities
-    RVector3D angle; // angle between Earth's coordinate and ours (filtered)
-    RVector3D angularVelocity; // angular velocity from gyroscope
-    double voltage; //accumulators voltage
+    RVector3D angle;            // angle between Earth's coordinate and ours (filtered)
+    RVector3D angularVelocity;  // angular velocity from gyroscope
+    double voltage;             // accumulators voltage (не использована)
 
 #ifdef USE_COMPASS
     double copterHeading;
