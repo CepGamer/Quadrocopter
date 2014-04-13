@@ -1,5 +1,6 @@
 #include "RVector3D.h"
-#include "Motor.h"
+//  Заменил их мотор на наш.
+#include "../../trikRuntime/trikControl/include/trikControl/motor.h"
 #include "Definitions.h"
 
 #ifndef MOTORCONTROLLER_H
@@ -31,7 +32,7 @@ private:
     int direction[N_MOTORS];
 //#endif
 
-    Motor motors_[N_MOTORS];
+    trikControl::Motor motors_[N_MOTORS];
 
     bool useMotors[N_MOTORS];
 

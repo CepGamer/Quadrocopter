@@ -1,3 +1,4 @@
+/*
 // I2C device class (I2Cdev) demonstration Arduino sketch for MPU6050 class using DMP (MotionApps v2.0)
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
@@ -14,6 +15,7 @@
 //     2012-06-04 - remove accel offset clearing for better results (thanks Sungon Lee)
 //     2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
 //     2012-05-30 - basic DMP initialization working
+*/
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -39,21 +41,24 @@ THE SOFTWARE.
 ===============================================
 */
 
+#include <QQuaternion>
+#include <QVector3D>
+
 #ifndef MPU6050DMP_H
 #define MPU6050DMP_H
 
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
-#include <Arduino.h>
-#include "Wire.h"
+//#include <Arduino.h>
+//#include "Wire.h"
 #include "InfoLED.h"
 #include "Definitions.h"
 
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
-#include "I2Cdev.h"
+//#include "I2Cdev.h"
 
-#include "MPU6050_6Axis_MotionApps20.h"
+//#include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
 extern bool mpuInterrupt; // indicates whether MPU interrupt pin has gone high
@@ -90,22 +95,22 @@ private:
     
     // MPU control/status vars
     bool dmpReady;  // set true if DMP init was successful
-    uint8_t mpuIntStatus;   // holds actual interrupt status byte from MPU
-    uint8_t devStatus;      // return status after each device operation (0 = success, !0 = error)
-    uint16_t packetSize;    // expected DMP packet size (default is 42 bytes)
-    uint16_t fifoCount;     // count of all bytes currently in FIFO
-    uint8_t fifoBuffer[64]; // FIFO storage buffer
+    quint8 mpuIntStatus;    // holds actual interrupt status byte from MPU
+    quint8 devStatus;       // return status after each device operation (0 = success, !0 = error)
+    quint16 packetSize;     // expected DMP packet size (default is 42 bytes)
+    quint16 fifoCount;      // count of all bytes currently in FIFO
+    quint8 fifoBuffer[64];  // FIFO storage buffer
     static const double maxWait = 10e-3;
 
     static const double gyroMulConstRad = M_PI / 180 * 16.4;
     
     // orientation/motion vars
-    Quaternion q;           // [w, x, y, z]         quaternion container
-    VectorInt16 aa;         // [x, y, z]            accel sensor measurements
-    VectorInt16 aaReal;     // [x, y, z]            gravity-free accel sensor measurements
-    VectorInt16 aaWorld;    // [x, y, z]            world-frame accel sensor measurements
-    VectorFloat gravity;    // [x, y, z]            gravity vector
-    int16_t av[DIM];        // [p, q, r]            gyro sensor measurements
+    QQuaternion q;          // [w, x, y, z]         quaternion container
+    QVector3D aa;           // [x, y, z]            accel sensor measurements
+    QVector3D aaReal;       // [x, y, z]            gravity-free accel sensor measurements
+    QVector3D aaWorld;      // [x, y, z]            world-frame accel sensor measurements
+    QVector3D gravity;      // [x, y, z]            gravity vector
+    qint16 av[DIM];         // [p, q, r]            gyro sensor measurements
     float ypr[DIM];         // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
     float tfloat[DIM];
     //float acc[DIM];         // [x, y, z]            accel sensor measurements (float)

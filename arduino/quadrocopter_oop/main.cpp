@@ -1,6 +1,8 @@
 #include <QCoreApplication>
 #include "Quadrocopter.h"
 
+Quadrocopter * quadro;
+
 int main (int argc, char ** argv)
 {
     QCoreApplication * core = new QCoreApplication(argc, argv);

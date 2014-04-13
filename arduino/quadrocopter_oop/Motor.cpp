@@ -1,6 +1,6 @@
 #include "Motor.h"
 #include "Definitions.h"
-#include "Arduino.h"
+//#include "Arduino.h"
 
 Motor::Motor(int pin)
 {

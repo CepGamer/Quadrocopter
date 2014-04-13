@@ -1,44 +1,28 @@
 #include "Quadrocopter.h"
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "PID.h"
 #ifdef _arch_avr_
     #include <avr/delay.h>
 #endif
 
 Quadrocopter::Quadrocopter()
-{
-    needPCTx = false;
-
-    flying = false;
-
-    serialReadN = 21; // 3 + 12 + 6
-
+    : needPCTx(false)
+    , flying(false)
 #ifdef PID_USE_YAW_ANGLE
-    serialReadN += 6;
+    , serialReadN(27)   // 3 + 12 + 6 + 6
+#else
+    , serialReadN(21)   // 3 + 12 + 6
 #endif
-
+    , reactionType(ReactionNone)
+    , forceOverrideValue(0)
+    , forceOverride(1)
+{
     DefaultVSensorPin = A4;
-    reactionType = ReactionNone;
 
-#ifdef _arch_avr_
-    #ifdef DEBUG_DAC
-        DefaultMotorPins[0] = 3;
-        DefaultMotorPins[1] = 5;
-        DefaultMotorPins[2] = 6;
-        DefaultMotorPins[3] = 9;
-    #else
-        DefaultMotorPins[0] = 3;
-        DefaultMotorPins[1] = 9;
-        DefaultMotorPins[2] = 10;
-        DefaultMotorPins[3] = 11;
-    #endif
-#endif
-#ifdef _arch_arm_
-        DefaultMotorPins[0] = 6;
-        DefaultMotorPins[1] = 7;
-        DefaultMotorPins[2] = 8;
-        DefaultMotorPins[3] = 9;
-#endif
+    DefaultMotorPins[0] = QString ("7");
+    DefaultMotorPins[1] = QString ("8");
+    DefaultMotorPins[2] = QString ("9");
+    DefaultMotorPins[3] = QString ("10");
 
 #ifdef DEBUG_SERIAL_SECOND
     DEBUG_SERIAL_SECOND.begin(115200);
@@ -46,6 +30,7 @@ Quadrocopter::Quadrocopter()
 
     MSerial = new MySerial;
     MController = new MotorController(DefaultMotorPins);
+    //  Зачем сенсор вольтажа?
     VSensor = new VoltageSensor(DefaultVSensorPin, DefaultVSensorMaxVoltage);
     MyMPU = new MPU6050DMP;
 
@@ -57,19 +42,16 @@ Quadrocopter::Quadrocopter()
 #endif
 
 #ifdef DEBUG_FREQ_PIN
-    freqLed = InfoLED(DEBUG_FREQ_PIN, InfoLED::DIGITAL);
+//    freqLed = InfoLED(DEBUG_FREQ_PIN, InfoLED::DIGITAL);
 #endif
 
 #ifdef DEBUG_MPUBYTES_PIN
-    mpuBytesLed = InfoLED(DEBUG_MPUBYTES_PIN, InfoLED::DIGITAL);
+//    mpuBytesLed = InfoLED(DEBUG_MPUBYTES_PIN, InfoLED::DIGITAL);
 #endif
 
     MController->calibrate();
 
-    forceOverrideValue = 0;
-    forceOverride = 1;
-
-    this->reset();
+    reset();
 
     MyMPU->initialize();
 
@@ -81,8 +63,8 @@ Quadrocopter::Quadrocopter()
     Joystick = new PWMJoystick;
 
 #ifdef DEBUG_DAC
-    myLed = MyMPU->myLed;
-    myLed.setState(0);
+//    myLed = MyMPU->myLed;
+//    myLed.setState(0);
 #endif
 
 #ifdef _arch_avr_
@@ -163,25 +145,25 @@ void Quadrocopter::iteration()
     {
 
 #ifdef DEBUG_FREQ_PIN
-    freqLed.changeDigitalState();
+//    freqLed.changeDigitalState();
 #endif
 
 #ifdef DEBUG_MPUBYTES_PIN
-    mpuBytesLed.setState(MyMPU->bytesAvailableFIFO() > MyMPU->getPacketSize());
+//    mpuBytesLed.setState(MyMPU->bytesAvailableFIFO() > MyMPU->getPacketSize());
 #endif
 
 #ifdef DEBUG_DAC
-    myLed.setState(0);
+//    myLed.setState(0);
 #endif
 
         { // Serial
             processSerialGetCommand();
-            myLed.setState(5);
+//            myLed.setState(5);
             processSerialDoCommand();
         }
 
 #ifdef DEBUG_DAC
-        myLed.setState(20);
+//        myLed.setState(20);
 #endif
 
         tCount.setTime();
@@ -192,7 +174,7 @@ void Quadrocopter::iteration()
         sensorsTime = tCount.getTimeDifferenceSeconds();
 
 #ifdef DEBUG_DAC
-        myLed.setState(80);
+//        myLed.setState(80);
 #endif
 
 
@@ -213,7 +195,7 @@ void Quadrocopter::iteration()
 
 
 #ifdef DEBUG_DAC
-        myLed.setState(100);
+//        myLed.setState(100);
 #endif
 
         MyMPU->resetNewData();

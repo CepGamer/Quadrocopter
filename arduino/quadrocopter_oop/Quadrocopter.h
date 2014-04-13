@@ -6,10 +6,14 @@
 #include "MotorController.h"
 #include "MySerial.h"
 #include "PID.h"
-#include "InfoLED.h"
+//#include "InfoLED.h"
 #include "VoltageSensor.h"
 #include "PWMJoystick.h"
 #include "LowPassFilter.h"
+
+#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
+
+#include <QString>
 
 #ifdef USE_COMPASS
     // i2cdevlib
@@ -29,28 +33,32 @@ private:
     MySerial* MSerial;
     VoltageSensor* VSensor;
     MPU6050DMP* MyMPU;
+
+    trikControl::Brick controller;
+
 #ifdef USE_COMPASS
     HMC5883L* MyCompass;
 #endif
     PWMJoystick* Joystick;
 
-    // pins configuration
-
-    int DefaultMotorPins[4];
+    //  pins configuration
+    //  Номера портов, по которым подключены моторы и сенсор
+    //  Меняем пины моторов на силовые/серво порты
+    QString DefaultMotorPins[4];
 
     int DefaultVSensorPin;
 
-    //reaction type (different types of processing sensors' data)
+    //  reaction type (different types of processing sensors' data)
     enum reactionType_ {ReactionNone, ReactionAngularVelocity, ReactionAcceleration, ReactionAngle};
     reactionType_ reactionType;
 
-    // torque corrections
+    //  torque corrections
     RVector3D torqueAutomaticCorrection;
 
     RVector3D angleManualCorrection;
 
-    static const double DefaultVSensorMaxVoltage = 17.95;   //maximal voltage (before voltage divider)
-    //15.16? 11.95->2.6
+    static const double DefaultVSensorMaxVoltage = 17.95;   //  maximal voltage (before voltage divider)
+    //  15.16? 11.95->2.6
 
     static const double g = 9.80665;    // gravitational acceleration
 
@@ -74,8 +82,8 @@ private:
 
     PID pidAngleX, pidAngleY;
 
-    bool flying;
-    double flyingTime;
+    bool flying;                //  Летит ли в данный момент квадрокоптер
+    double flyingTime;          //  Сколько времени летит квадрокоптер
 
 #ifdef PID_USE_YAW
     PID pidAngularVelocityZ;
@@ -90,7 +98,7 @@ private:
     double dt, dtMax, sensorsTime, calculationsTime;
     TimerCount tCount;
 
-    InfoLED myLed;
+//    InfoLED myLed;
 
     double forceOverrideValue;
     bool forceOverride;
@@ -100,11 +108,11 @@ private:
     LowPassFilter<double> angleZLPF;
 
 #ifdef DEBUG_FREQ_PIN
-    InfoLED freqLed;
+//    InfoLED freqLed;
 #endif
 
 #ifdef DEBUG_MPUBYTES_PIN
-    InfoLED mpuBytesLed;
+//    InfoLED mpuBytesLed;
 #endif
 
     // bytes to read

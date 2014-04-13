@@ -3,20 +3,19 @@
 #include "TimerCount.h"
 #include "Arduino.h"
 
+
 MySerial::MySerial()
+    : commandAvailable(false)
+    , readError(false)
+    , sendAutomatically(false)
+    , bufferCount(0)
+    , Accuracy("%f")
 {
-    Serial.begin(115200);
+//  Инициализация последовательного соединения со скоростью 115200
+//    Serial.begin(115200);
+
 
     led = InfoLED(5);
-    commandAvailable = false;
-    readError = false;
-
-    Accuracy = "%f";
-
-    sendAutomaticly = false;
-
-    readError = false;
-    bufferCount = 0;
 }
 
 void MySerial::bufferInit()
@@ -190,18 +189,18 @@ void MySerial::receiveCommand()
     }
     else
     {
-        if(!sendAutomaticly) led.setOff();
+        if(!sendAutomatically) led.setOff();
         commandAvailable = false;
     }
 }
 
 bool MySerial::isSendAutomaticlyEnabled()
 {
-    return(sendAutomaticly);
+    return(sendAutomatically);
 }
 
 void MySerial::toggleSendAutomaticly()
 {
-    sendAutomaticly ^= 1;
-    led.setState(sendAutomaticly);
+    sendAutomatically ^= 1;
+    led.setState(sendAutomatically);
 }

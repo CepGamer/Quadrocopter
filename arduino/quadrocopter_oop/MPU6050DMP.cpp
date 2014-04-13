@@ -2,6 +2,7 @@
 // 6/21/2012 by Jeff Rowberg <jeff@rowberg.net>
 // Updates should (hopefully) always be available at https://github.com/jrowberg/i2cdevlib
 //
+/*
 // Changelog:
 //     2012-06-21 - added note about Arduino 1.0.1 + Leonardo compatibility error
 //     2012-06-20 - improved FIFO overflow handling and simplified read process
@@ -14,6 +15,7 @@
 //     2012-06-04 - remove accel offset clearing for better results (thanks Sungon Lee)
 //     2012-06-01 - fixed gyro sensitivity to be 2000 deg/sec instead of 250
 //     2012-05-30 - basic DMP initialization working
+*/
 
 /* ============================================
 I2Cdev device library code is placed under the MIT license
@@ -39,9 +41,9 @@ THE SOFTWARE.
 ===============================================
 */
 
-#include "I2Cdev.h"
-#include "MPU6050_6Axis_MotionApps20.h"
-#include "MPU6050DMP.h"
+//#include "I2Cdev.h"
+//#include "MPU6050_6Axis_MotionApps20.h"
+//#include "MPU6050DMP.h"
 #include "TimerCount.h"
 #include "Quadrocopter.h"
 

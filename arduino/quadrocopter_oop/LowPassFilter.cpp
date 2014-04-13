@@ -24,7 +24,7 @@ template <typename T> void LowPassFilter<T>::setPeriod(double nPeriod)
 
 template <typename T> T LowPassFilter<T>::getValue()
 {
-    return(value);
+    return value;
 }
 
 template <typename T> inline void LowPassFilter<T>::iterationAngle(T currentRawValue, double dt)

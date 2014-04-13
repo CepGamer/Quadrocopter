@@ -18,6 +18,8 @@ debug/accel_test/201211
 
 arduino/quadrocopter_oop_ino/
 
+arduino/build-*
+
 arduino/quadrocopter_oop/KalmanFilter.cpp
 arduino/quadrocopter_oop/KalmanFilter.h
 

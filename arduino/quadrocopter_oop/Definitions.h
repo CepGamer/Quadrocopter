@@ -6,11 +6,12 @@
 #define doubleEps 1E-2
 
 // Architecture
-#ifdef __arm__
-  #define _arch_arm_
-#else
-  #define _arch_avr_
-#endif
+//#ifdef __arm__
+//  #define _arch_arm_
+//#else
+//  #define _arch_avr_
+//#endif
+#define TRIK
 
 // Disable MPU-6050
 //#define DEBUG_NO_MPU
@@ -46,7 +47,7 @@
 #define USE_MPU_BYPASS
 
 // Enable copter compass (also enables compass rxtx)
-#define USE_COMPASS
+//#define USE_COMPASS
 
 // if defined: joystick's compass rotates copter; default control
 // ifndef    : joystick doesnt rotate copter    ; rotated control
@@ -54,7 +55,7 @@
 
 // Additional debug serial port
 //define to enable
-#define DEBUG_SERIAL_SECOND Serial1
+//#define DEBUG_SERIAL_SECOND Serial1
 
 // Disables PID if throttle < _value_
 #define MINIMUM_PID_THROTTLE 0.18

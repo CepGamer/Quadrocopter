@@ -5,15 +5,16 @@
 #ifndef MYSERIAL_H
 #define MYSERIAL_H
 
+//  Класс коммуникации с пекарней^W компьютером
 class MySerial
 {
 private:
-    //constants
-    const char* Accuracy; //precision
-    static const unsigned int MaxwaitU = 100000; //maximal wait time in useconds
-    static const unsigned int BufferMax = 200; //maximal buffer size
+    //  constants
+    const char* Accuracy;                           //  precision
+    static const unsigned int MaxwaitU = 100000;    //  maximal wait time in microseconds
+    static const unsigned int BufferMax = 200;      //  maximal buffer size
 
-    bool readError; //read error
+    bool readError;                                 //  read error
     unsigned int readN;
 
     //buffers
@@ -22,9 +23,9 @@ private:
     char command;
     bool commandAvailable;
 
-    bool sendAutomaticly;
+    bool sendAutomatically;
 
-    InfoLED led;
+    InfoLED led;        //  Огонёк. Что с ним делать - неизвестно пока науке.
 
 public:
     MySerial();
@@ -40,21 +41,21 @@ public:
     void writeDouble(double minValue, double maxValue, double value, unsigned int bytes);
 
     //read-write methods for RVector3D
-    enum RVector3DPrintMode {PRINT_TAB, PRINT_RAW}; //print type: TAB (decimal) or RAW (binary)
-    enum RVector3DUseAxis {USE_2D, USE_3D}; //axis count
+    enum RVector3DPrintMode {PRINT_TAB, PRINT_RAW};         //  print type: TAB (decimal) or RAW (binary)
+    enum RVector3DUseAxis {USE_2D, USE_3D};                 //  axis count
 
     void RVector3DWrite(RVector3D vector, RVector3DPrintMode mode = PRINT_TAB, RVector3DUseAxis uaxis = USE_3D);
 
     void writeNumber(double value);
 
-    void receiveCommand(); //recieve command and store it into command
+    void receiveCommand();                                  //  recieve command and store it into command
     char getCommand();
     void dropCommand();
 
     bool isSendAutomaticlyEnabled();
     void toggleSendAutomaticly();
 
-    void waitForByte(); //wait MAXWAIT_U useconds for incoming byte
+    void waitForByte();                                     //  wait MAXWAIT_U useconds for incoming byte
     bool getReadError();
 
     char read();

@@ -9,10 +9,10 @@
 #endif
 
 RVector3D::RVector3D()
+    : x(0)
+    , y(0)
+    , z(0)
 {
-    x = 0;
-    y = 0;
-    z = 0;
 }
 
 RVector3D::RVector3D(double x_0, double y_0, double z_0)

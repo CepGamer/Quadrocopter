@@ -42,9 +42,8 @@ void MotorController::setMotors(double power[N_MOTORS])
 }
 
 MotorController::MotorController(const int motorControlPins[N_MOTORS])
+    : initialized(false)
 {
-    initialized = false;
-
     useMotors[A] = 1;
     useMotors[B] = 1;
     useMotors[C] = 1;
