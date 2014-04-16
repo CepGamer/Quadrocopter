@@ -4,7 +4,7 @@
 
 void Quadrocopter::processSensorsData()
 {
-    //MPU->iteration();
+//    MPU->iteration();
     angle.parseFloat(MyMPU->getAngleXYZ());
     angularVelocity.parseFloat(MyMPU->getAngularVelocityXYZ());
 

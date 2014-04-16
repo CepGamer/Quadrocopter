@@ -1,7 +1,8 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#define MPI 3.141592653589793
+#define M_PI 3.141592653589793
+#define MPI  3.141592653589793
 
 #define doubleEps 1E-2
 
@@ -11,7 +12,7 @@
 //#else
 //  #define _arch_avr_
 //#endif
-#define TRIK
+#define _arch_TRIK
 
 // Disable MPU-6050
 //#define DEBUG_NO_MPU
@@ -44,7 +45,7 @@
 #define PID_USE_YAW_ANGLE
 
 // Enable MPU-6050 I2C BYPASS
-#define USE_MPU_BYPASS
+//#define USE_MPU_BYPASS
 
 // Enable copter compass (also enables compass rxtx)
 //#define USE_COMPASS
@@ -65,6 +66,9 @@
 
 // Disables PID I (integral <-- 0) if time < _value_ (seconds)
 #define MINIMUM_FLYING_TIME 0
+
+//  Отключает запрос с пульта управления и ориентируется по углам 0 0 0
+#define STABILIZATION
 
 #define angleMPIPINorm(x) {while(x < -M_PI) {x += 2 * M_PI;} while(x > M_PI) {x -= 2 * M_PI;}}
 

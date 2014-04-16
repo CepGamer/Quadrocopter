@@ -1,6 +1,6 @@
 #include "RVector3D.h"
-#include "Arduino.h"
-#include "InfoLED.h"
+//#include "Arduino.h"
+//#include "InfoLED.h"
 
 #ifndef MYSERIAL_H
 #define MYSERIAL_H
@@ -19,20 +19,20 @@ private:
 
     //buffers
     int bufferCount;
-    uint8_t buffer[BufferMax];
+    quint8 buffer[BufferMax];
     char command;
     bool commandAvailable;
 
     bool sendAutomatically;
 
-    InfoLED led;        //  Огонёк. Что с ним делать - неизвестно пока науке.
+//    InfoLED led;        //  Огонёк. Что с ним делать - неизвестно пока науке.
 
 public:
     MySerial();
 
     void bufferInit();
     void bufferWrite();
-    void bufferAdd(uint8_t tChar);
+    void bufferAdd(quint8 tChar);
     void bufferAdd(char* tArr);
     void bufferWriteN();
 

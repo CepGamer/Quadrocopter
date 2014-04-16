@@ -143,11 +143,12 @@ int MPU6050DMP::getPacketSize()
     return(packetSize);
 }
 
-MPU6050DMP::MPU6050DMP()
+MPU6050DMP::MPU6050DMP(trikControl::Brick *brck)
 {
 #ifdef DEBUG_NO_MPU
     return;
 #endif
+    brick = brck;
     dmpReady = false;
 }
 
@@ -166,9 +167,11 @@ void MPU6050DMP::initialize()
 #endif
 
     // reset YPR data
-    ypr[0] = ypr[1] = ypr[2] = 0;
-    av[0] = av[1] = av[2] = 0;
+    ypr = QVector<int> (3);
+    av = QVector<int> (3);
+    dmpReady = true;
 
+/*
     // join I2C bus (I2Cdev library doesn't do this automatically)
     Wire.begin();
 
@@ -198,6 +201,7 @@ void MPU6050DMP::initialize()
 #endif
     }
     //else Serial.print("MPU init failed\n");
+    */
     newData = false;
 }
 
@@ -227,7 +231,7 @@ void MPU6050DMP::iteration()
 #ifdef DEBUG_DAC
     myLed.setState(20);
 #endif
-
+/*
     // get current FIFO count
     fifoCount = mpu.getFIFOCount();
 
@@ -257,13 +261,15 @@ void MPU6050DMP::iteration()
 #ifdef DEBUG_DAC
         myLed.setState(70);
 #endif
-
+*/
         // track FIFO count here in case there is > 1 packet available
         // (this lets us immediately read more without waiting for an interrupt)
-        mpu.dmpGetQuaternion(&q, fifoBuffer);
-        mpu.dmpGetGyro(av, fifoBuffer);
-        mpu.dmpGetGravity(&gravity, &q);
-        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+//        mpu.dmpGetQuaternion(&q, fifoBuffer);
+//        mpu.dmpGetGyro(av, fifoBuffer);
+//        mpu.dmpGetGravity(&gravity, &q);
+//        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+    av = brick->gyroscope()->read();
+
         //mpu.dmpGetAccelFloat(acc, fifoBuffer);
 #ifdef MPUDEBUG
         getAngleXYZ();
@@ -284,7 +290,7 @@ void MPU6050DMP::iteration()
 #endif
         newData = true;
 
-    }
+//    }
 #ifdef DEBUG_DAC
     myLed.setState(70);
 #endif

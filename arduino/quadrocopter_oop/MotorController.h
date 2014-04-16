@@ -33,7 +33,7 @@ private:
     int direction[N_MOTORS];
 //#endif
 
-    trikControl::PowerMotor * motors_[N_MOTORS];
+    trikControl::Motor * motors_[N_MOTORS];
 
     bool useMotors[N_MOTORS];
 

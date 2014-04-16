@@ -1,3 +1,5 @@
+#include "Definitions.h"
+
 #ifndef PWMJOYSTICK_H
 #define PWMJOYSTICK_H
 

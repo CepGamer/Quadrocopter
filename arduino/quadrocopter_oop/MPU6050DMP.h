@@ -43,6 +43,7 @@ THE SOFTWARE.
 
 #include <QQuaternion>
 #include <QVector3D>
+#include <QVector>
 
 #ifndef MPU6050DMP_H
 #define MPU6050DMP_H
@@ -51,8 +52,10 @@ THE SOFTWARE.
 // is used in I2Cdev.h
 //#include <Arduino.h>
 //#include "Wire.h"
-#include "InfoLED.h"
+//#include "InfoLED.h"
 #include "Definitions.h"
+
+#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
 
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
@@ -60,8 +63,6 @@ THE SOFTWARE.
 
 //#include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
-
-extern brick;
 
 class MPU6050DMP
 {
@@ -110,14 +111,16 @@ private:
     QVector3D aaReal;       // [x, y, z]            gravity-free accel sensor measurements
     QVector3D aaWorld;      // [x, y, z]            world-frame accel sensor measurements
     QVector3D gravity;      // [x, y, z]            gravity vector
-    qint16 av[DIM];         // [p, q, r]            gyro sensor measurements
-    float ypr[DIM];         // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+    QVector<int> av;        // [p, q, r]            gyro sensor measurements
+    QVector<float> ypr;     // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
     float tfloat[DIM];
     //float acc[DIM];         // [x, y, z]            accel sensor measurements (float)
     bool newData;
 
+    trikControl::Brick * brick;
+
 public:
-    MPU6050DMP();
+    MPU6050DMP(trikControl::Brick * brck);
 
     void initialize();
     bool notBusy();

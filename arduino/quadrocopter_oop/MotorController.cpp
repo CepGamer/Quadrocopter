@@ -63,7 +63,7 @@ MotorController::MotorController(trikControl::Brick * brick, QStringList ports)
     }
 
     // wait for ESC
-    delay(INIT_TIMEOUT);
+//    delay(INIT_TIMEOUT);
 
     setForce(0);
     setTorque(RVector3D());
@@ -90,6 +90,7 @@ void MotorController::initialize()
 
 void MotorController::calibrate()
 {
+#ifndef _arch_TRIK
     initialize();
     setTorque(0);
     delay(500);
@@ -99,6 +100,7 @@ void MotorController::calibrate()
     setForce(0);
     setTorque(0);
     delay(500);
+#endif
 }
 
 void MotorController::setForce(double a)

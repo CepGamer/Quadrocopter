@@ -11,9 +11,6 @@ int main (int argc, char ** argv)
     QCoreApplication * core = new QCoreApplication(argc, argv);
     quadro = new Quadrocopter();
     brick = new trikControl::Brick(core->thread(), "");
-    while(1)
-    {
-        quadro->iteration();
-    }
+
     return core->exec();
 }

@@ -139,10 +139,14 @@ public:
 
     void processJoystickRx();
 
-    void iteration();
     void MPUInterrupt();
 
     RVector3D getTorques();
+
+public slots:
+
+    void iteration();
+
 };
 
 #endif // QUADROCOPTER_H

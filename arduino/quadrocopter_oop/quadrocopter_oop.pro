@@ -22,7 +22,6 @@ HEADERS += ComplementaryFilter.h \
            RVector3D.h \
            TimerCount.h \
            VoltageSensor.h \
-    PWMInput.h \
     PWMJoystick.h
 SOURCES += \
            DAC8512.cpp \
@@ -37,7 +36,6 @@ SOURCES += \
            RVector3D.cpp \
            TimerCount.cpp \
            VoltageSensor.cpp \
-           PWMInput.cpp \
     PWMJoystick.cpp \
     main.cpp \
     LowPassFilter.cpp \

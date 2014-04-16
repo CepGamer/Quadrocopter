@@ -34,7 +34,7 @@ void MySerial::bufferWrite()
     Serial.write(buffer, bufferCount);
 }
 
-void MySerial::bufferAdd(uint8_t tChar)
+void MySerial::bufferAdd(quint8 tChar)
 {
     buffer[bufferCount++] = tChar;
 }
