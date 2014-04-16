@@ -1,4 +1,5 @@
 #include "Definitions.h"
+#include <QTime>
 
 #ifndef TIMERCOUNT_H
 #define TIMERCOUNT_H
@@ -6,7 +7,7 @@
 class TimerCount
 {
     private:
-        unsigned long time;
+        QTime time;
         bool timeIsset;
     public:
         TimerCount();

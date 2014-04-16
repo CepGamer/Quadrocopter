@@ -49,7 +49,7 @@ Quadrocopter::Quadrocopter()
 //    mpuBytesLed = InfoLED(DEBUG_MPUBYTES_PIN, InfoLED::DIGITAL);
 #endif
 
-    MController->calibrate();
+//    MController->calibrate();
 
     reset();
 

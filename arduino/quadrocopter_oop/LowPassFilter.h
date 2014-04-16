@@ -24,7 +24,7 @@ public:
     inline double getPeriod();                                  //  returns period
     inline void setValue(T newValue);                           //  set new value
 
-    inline void initialiseLPF();                                        //  Инициализирует фильтр
+    inline void initialiseLPF();                                //  Инициализирует фильтр
 };
 
 #include "LowPassFilter.cpp"

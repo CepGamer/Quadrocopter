@@ -1,7 +1,7 @@
 #ifndef PWMINPUT_H
 #define PWMINPUT_H
 
-#include <Arduino.h>
+//#include <Arduino.h>
 
 #define PINSN 4
 

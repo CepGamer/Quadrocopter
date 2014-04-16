@@ -1,4 +1,4 @@
-#include <Arduino.h>
+//#include <Arduino.h>
 #include "TimerCount.h"
 
 TimerCount::TimerCount()
@@ -8,18 +8,18 @@ TimerCount::TimerCount()
 
 void TimerCount::setTime()
 {
-    time = micros();
+    time.start();
     timeIsset = true;
 }
 
 unsigned long TimerCount::getTimeDifference()
 {
-    return(micros() - time);
+    return(time.elapsed());
 }
 
 double TimerCount::getTimeDifferenceSeconds()
 {
-    return(getTimeDifference() / 1.E6);
+    return(getTimeDifference() / 1.E3);
 }
 
 bool TimerCount::getTimeIsset()

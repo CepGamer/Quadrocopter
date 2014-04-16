@@ -1,6 +1,7 @@
 #include "RVector3D.h"
 //  Заменил их мотор на наш.
-#include "../../trikRuntime/trikControl/include/trikControl/motor.h"
+#include "../../trikRuntime/trikControl/src/powerMotor.h"
+#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
 #include "Definitions.h"
 
 #ifndef MOTORCONTROLLER_H
@@ -32,15 +33,14 @@ private:
     int direction[N_MOTORS];
 //#endif
 
-    trikControl::Motor motors_[N_MOTORS];
+    trikControl::PowerMotor * motors_[N_MOTORS];
 
     bool useMotors[N_MOTORS];
 
     RVector3D coordinatesOfMotors[N_MOTORS];
 
 public:
-
-    MotorController(const int motorControlPins[N_MOTORS]);
+    MotorController(trikControl::Brick * brick, QStringList ports);
     ~MotorController();
 
     double getSpeed(RVector3D torqueVec, int motor);

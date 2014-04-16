@@ -61,7 +61,7 @@ THE SOFTWARE.
 //#include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
-extern bool mpuInterrupt; // indicates whether MPU interrupt pin has gone high
+extern brick;
 
 class MPU6050DMP
 {

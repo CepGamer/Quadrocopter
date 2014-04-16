@@ -1,5 +1,5 @@
 #include "MotorController.h"
-#include "Arduino.h"
+//#include "Arduino.h"
 #include "TimerCount.h"
 #include "RVector3D.h"
 
@@ -32,16 +32,16 @@ double MotorController::getSpeed(RVector3D torqueVec, int motor)
 void MotorController::setTorque(RVector3D torqueVec)
 {
     for (int i = 0; i < N_MOTORS; i++)
-        motors_[i].setPower(getSpeed(torqueVec, i));
+        motors_[i]->setPower(getSpeed(torqueVec, i));
 }
 
 void MotorController::setMotors(double power[N_MOTORS])
 {
     for (int i = 0; i < N_MOTORS; i++)
-        motors_[i].setPower(power[i]);
+        motors_[i]->setPower(power[i]);
 }
 
-MotorController::MotorController(const int motorControlPins[N_MOTORS])
+MotorController::MotorController(trikControl::Brick * brick, QStringList ports)
     : initialized(false)
 {
     useMotors[A] = 1;
@@ -58,8 +58,8 @@ MotorController::MotorController(const int motorControlPins[N_MOTORS])
     
     for (int i = 0; i < N_MOTORS; i++)
     {
-        motors_[i].setControlPin(motorControlPins[i]);
-        motors_[i].setPower(0);
+        motors_[i] = brick->motor(ports[i]);
+        motors_[i]->setPower(0);
     }
 
     // wait for ESC
@@ -81,9 +81,10 @@ double MotorController::getForce()
 
 void MotorController::initialize()
 {
-    if(initialized) return;
-    for(int i = 0; i < N_MOTORS; i++)
-        motors_[i].initializeControlPin();
+    if (initialized)
+        return ;
+//    for(int i = 0; i < N_MOTORS; i++)
+//        motors_[i]->initializeControlPin();
     initialized = true;
 }
 

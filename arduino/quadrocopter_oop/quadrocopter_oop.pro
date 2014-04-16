@@ -13,9 +13,7 @@ QT       += core
 HEADERS += ComplementaryFilter.h \
            DAC8512.h \
            Definitions.h \
-           InfoLED.h \
            LowPassFilter.h \
-           Motor.h \
            MotorController.h \
            MPU6050DMP.h \
            MySerial.h \
@@ -24,15 +22,10 @@ HEADERS += ComplementaryFilter.h \
            RVector3D.h \
            TimerCount.h \
            VoltageSensor.h \
-           LowPassFilter.cpp \
-           ComplementaryFilter.cpp \
     PWMInput.h \
     PWMJoystick.h
-SOURCES += ComplementaryFilter.cpp \
+SOURCES += \
            DAC8512.cpp \
-           InfoLED.cpp \
-           LowPassFilter.cpp \
-           Motor.cpp \
            MotorController.cpp \
            MPU6050DMP.cpp \
            MySerial.cpp \
@@ -46,4 +39,6 @@ SOURCES += ComplementaryFilter.cpp \
            VoltageSensor.cpp \
            PWMInput.cpp \
     PWMJoystick.cpp \
-    main.cpp
+    main.cpp \
+    LowPassFilter.cpp \
+    ComplementaryFilter.cpp
