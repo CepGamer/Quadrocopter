@@ -16,18 +16,17 @@ HEADERS += ComplementaryFilter.h \
            LowPassFilter.h \
            MotorController.h \
            MPU6050DMP.h \
-           MySerial.h \
            PID.h \
            Quadrocopter.h \
            RVector3D.h \
            TimerCount.h \
-           VoltageSensor.h \
-    PWMJoystick.h
+    PWMJoystick.h \
+    matrix3.h \
+    vector3.h
 SOURCES += \
            DAC8512.cpp \
            MotorController.cpp \
            MPU6050DMP.cpp \
-           MySerial.cpp \
            PID.cpp \
            Quadrocopter.cpp \
            QuadrocopterCorrections.cpp \
@@ -35,8 +34,9 @@ SOURCES += \
            QuadrocopterSerial.cpp \
            RVector3D.cpp \
            TimerCount.cpp \
-           VoltageSensor.cpp \
     PWMJoystick.cpp \
     main.cpp \
     LowPassFilter.cpp \
-    ComplementaryFilter.cpp
+    ComplementaryFilter.cpp \
+    matrix3.cpp \
+    vector3.cpp

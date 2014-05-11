@@ -8,7 +8,7 @@ void Quadrocopter::processSensorsData()
     angle.parseFloat(MyMPU->getAngleXYZ());
     angularVelocity.parseFloat(MyMPU->getAngularVelocityXYZ());
 
-    voltage = VSensor->getValue();
+//    voltage = VSensor->getValue();
 
 #ifdef USE_COMPASS
     {

@@ -8,9 +8,10 @@ trikControl::Brick * brick;
 
 int main (int argc, char ** argv)
 {
+    const QString &a = QString("");
     QCoreApplication * core = new QCoreApplication(argc, argv);
-    quadro = new Quadrocopter();
-    brick = new trikControl::Brick(core->thread(), "");
+    brick = new trikControl::Brick(core->thread(), a);
+    quadro = new Quadrocopter(brick);
 
     return core->exec();
 }

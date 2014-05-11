@@ -5,7 +5,7 @@
     #include <avr/delay.h>
 #endif
 
-Quadrocopter::Quadrocopter()
+Quadrocopter::Quadrocopter(trikControl::Brick *brick)
     : needPCTx(false)
     , flying(false)
 #ifdef PID_USE_YAW_ANGLE
@@ -15,24 +15,25 @@ Quadrocopter::Quadrocopter()
 #endif
     , reactionType(ReactionNone)
     , forceOverrideValue(0)
-    , forceOverride(1)
+    , forceOverride(true)
+    , controller(brick)
 {
-    DefaultVSensorPin = A4;
+//    DefaultVSensorPin = A4;
 
-    DefaultMotorPins[0] = QString ("7");
-    DefaultMotorPins[1] = QString ("8");
-    DefaultMotorPins[2] = QString ("9");
-    DefaultMotorPins[3] = QString ("10");
+    DefaultMotorPins.append(QString ("7"));
+    DefaultMotorPins.append(QString ("8"));
+    DefaultMotorPins.append(QString ("9"));
+    DefaultMotorPins.append(QString ("10"));
 
 #ifdef DEBUG_SERIAL_SECOND
     DEBUG_SERIAL_SECOND.begin(115200);
 #endif
 
-    MSerial = new MySerial;
-    MController = new MotorController(DefaultMotorPins);
+//    MSerial = new MySerial;
+    MController = new MotorController(controller, DefaultMotorPins);
     //  Зачем сенсор вольтажа?
-    VSensor = new VoltageSensor(DefaultVSensorPin, DefaultVSensorMaxVoltage);
-    MyMPU = new MPU6050DMP;
+//    VSensor = new VoltageSensor(DefaultVSensorPin, DefaultVSensorMaxVoltage);
+    MyMPU = new MPU6050DMP(controller);
 
     pidAngleX = PID(PID::DIFFERENCE_ANGLE);
     pidAngleY = PID(PID::DIFFERENCE_ANGLE);
@@ -70,6 +71,11 @@ Quadrocopter::Quadrocopter()
 #ifdef _arch_avr_
     interrupts();
 #endif
+}
+
+Quadrocopter::~Quadrocopter()
+{
+
 }
 
 void Quadrocopter::reset()

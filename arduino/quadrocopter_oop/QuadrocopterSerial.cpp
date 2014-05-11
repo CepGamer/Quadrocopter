@@ -1,7 +1,8 @@
 #include "Quadrocopter.h"
 #include "PID.h"
-#include "PWMInput.h"
+//#include "PWMInput.h"
 
+/*
 void Quadrocopter::processSerialGetCommand()
 {
     if(MSerial->getCommand() == 0)
@@ -61,7 +62,7 @@ void Quadrocopter::processSerialDoCommand()
             needPCTx = true;
         }
     }
-    else if(MSerial->getCommand() == 'a'/* || MSerial->isSendAutomaticlyEnabled()*/)
+    else if(MSerial->getCommand() == 'a' || MSerial->isSendAutomaticlyEnabled())
     {
         MSerial->bufferInit();
         processSerialTextTx();
@@ -233,3 +234,4 @@ void Quadrocopter::processJoystickRx()
     else
         MController->setForce(Joystick->getPower() < MINIMUM_PID_THROTTLE ? 0 : Joystick->getPower());
 }
+*/

@@ -46,6 +46,7 @@ THE SOFTWARE.
 //#include "MPU6050DMP.h"
 #include "TimerCount.h"
 #include "Quadrocopter.h"
+#include <math.h>
 
 bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
 
@@ -103,7 +104,7 @@ void MPU6050DMP::attachFIFOInterrupt()
 #ifdef _arch_arm_
     attachInterrupt(2, dmpDataReady, RISING);
 #endif
-    mpuIntStatus = mpu.getIntStatus();
+//    mpuIntStatus = mpu.getIntStatus();
 
 }
 
@@ -112,7 +113,7 @@ int MPU6050DMP::bytesAvailableFIFO()
 #ifdef DEBUG_NO_MPU
     return 0;
 #endif
-    return(mpu.getFIFOCount());
+//    return(mpu.getFIFOCount());
 }
 
 void MPU6050DMP::resetNewData()
@@ -133,9 +134,9 @@ void MPU6050DMP::resetFIFO()
 #ifdef DEBUG_NO_MPU
     return;
 #endif
-    if(dmpReady)
+    if(dmpReady);
         //mpu.flushFIFOBytes(mpu.getFIFOCount());
-        mpu.resetFIFO();
+//        mpu.resetFIFO();
 }
 
 int MPU6050DMP::getPacketSize()
@@ -150,6 +151,7 @@ MPU6050DMP::MPU6050DMP(trikControl::Brick *brck)
 #endif
     brick = brck;
     dmpReady = false;
+    dcm.from_euler(0, 0, 0);
 }
 
 void MPU6050DMP::initialize()
@@ -167,7 +169,7 @@ void MPU6050DMP::initialize()
 #endif
 
     // reset YPR data
-    ypr = QVector<int> (3);
+    ypr = QVector<float> (3);
     av = QVector<int> (3);
     dmpReady = true;
 
@@ -270,7 +272,17 @@ void MPU6050DMP::iteration()
 //        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
     av = brick->gyroscope()->read();
 
-        //mpu.dmpGetAccelFloat(acc, fifoBuffer);
+    ypr.x = av[1];
+    ypr.y = av[1];
+    ypr.z = av[1];
+
+    dcm.rotate(ypr);
+
+    from_rotation_matrix();
+
+
+
+    //mpu.dmpGetAccelFloat(acc, fifoBuffer);
 #ifdef MPUDEBUG
         getAngleXYZ();
         for(int i = 0; i < 3; i++)
@@ -294,4 +306,43 @@ void MPU6050DMP::iteration()
 #ifdef DEBUG_DAC
     myLed.setState(70);
 #endif
+}
+
+//  Code from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
+void MPU6050DMP::from_rotation_matrix()
+{
+    float tr = dcm.a.x + dcm.b.y + dcm.c.z;
+
+    if (tr > 0) {
+        float S = sqrtf(tr+1) * 2;
+        q.setScalar(0.25f * S);
+        q.setX((dcm.c.y - dcm.b.z) / S);
+        q.setY((dcm.a.z - dcm.c.x) / S);
+        q.setZ((dcm.b.x - dcm.a.y) / S);
+    } else if ((dcm.a.x > dcm.b.y) && (dcm.a.x > dcm.c.z)) {
+        float S = sqrtf(1.0 + dcm.a.x - dcm.b.y - dcm.c.z) * 2;
+        q.setScalar((dcm.c.y - dcm.b.z) / S);
+        q.setX(0.25f * S);
+        q.setY((dcm.a.y + dcm.b.x) / S);
+        q.setZ((dcm.a.z + dcm.c.x) / S);
+    } else if (dcm.b.y > dcm.c.z) {
+        float S = sqrtf(1.0 + dcm.b.y - dcm.a.x - dcm.c.z) * 2;
+        q.setScalar((dcm.a.z - dcm.c.x) / S);
+        q.setX((dcm.a.y + dcm.b.x) / S);
+        q.setY(0.25f * S);
+        q.setZ((dcm.b.z + dcm.c.y) / S);
+    } else {
+        float S = sqrtf(1.0 + dcm.c.z - dcm.a.x - dcm.b.y) * 2;
+        q.setScalar((dcm.b.x - dcm.a.y) / S);
+        q.setX((dcm.a.z + dcm.c.x) / S);
+        q.setY((dcm.b.z + dcm.c.y) / S);
+        q.setZ(0.25f * S);
+    }
+}
+
+uint8_t MPU6050::dmpGetGravity(VectorFloat *v, Quaternion *q) {
+    v -> x = 2 * (q -> x*q -> z - q -> w*q -> y);
+    v -> y = 2 * (q -> w*q -> x + q -> y*q -> z);
+    v -> z = q -> w*q -> w - q -> x*q -> x - q -> y*q -> y + q -> z*q -> z;
+    return 0;
 }

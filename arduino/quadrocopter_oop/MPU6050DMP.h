@@ -54,6 +54,8 @@ THE SOFTWARE.
 //#include "Wire.h"
 //#include "InfoLED.h"
 #include "Definitions.h"
+#include "matrix3.h"
+#include "vector3.h"
 
 #include "../../trikRuntime/trikControl/include/trikControl/brick.h"
 
@@ -73,7 +75,7 @@ private:
     // specific I2C addresses may be passed as a parameter here
     // AD0 low = 0x68 (default for SparkFun breakout and InvenSense evaluation board)
     // AD0 high = 0x69
-    MPU6050 mpu;
+    //MPU6050 mpu;
     
     /* =========================================================================
        NOTE: In addition to connection 3.3v, GND, SDA, and SCL, this sketch
@@ -111,17 +113,23 @@ private:
     QVector3D aaReal;       // [x, y, z]            gravity-free accel sensor measurements
     QVector3D aaWorld;      // [x, y, z]            world-frame accel sensor measurements
     QVector3D gravity;      // [x, y, z]            gravity vector
-    QVector<int> av;        // [p, q, r]            gyro sensor measurements
-    QVector<float> ypr;     // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
+    QVector<float> av;      // [p, q, r]            gyro sensor measurements
+    Vector3f ypr;           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
     float tfloat[DIM];
     //float acc[DIM];         // [x, y, z]            accel sensor measurements (float)
     bool newData;
 
+    //  Represents direction cosine matrix
+    Matrix3f dcm;
+
     trikControl::Brick * brick;
+
+    void from_rotation_matrix();
 
 public:
     MPU6050DMP(trikControl::Brick * brck);
 
+    /// Initialises sensors
     void initialize();
     bool notBusy();
     void iteration();

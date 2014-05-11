@@ -42,7 +42,7 @@
 //#define PID_USE_YAW
 
 // Use 3rd angle instead of angular velocity
-#define PID_USE_YAW_ANGLE
+//#define PID_USE_YAW_ANGLE
 
 // Enable MPU-6050 I2C BYPASS
 //#define USE_MPU_BYPASS

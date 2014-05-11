@@ -4,10 +4,10 @@
 #include "TimerCount.h"
 //#include "Motor.h"
 #include "MotorController.h"
-#include "MySerial.h"
+//#include "MySerial.h"
 #include "PID.h"
 //#include "InfoLED.h"
-#include "VoltageSensor.h"
+//#include "VoltageSensor.h"
 #include "PWMJoystick.h"
 #include "LowPassFilter.h"
 
@@ -30,11 +30,11 @@ class Quadrocopter
 private:
     MotorController* MController;
     TimerCount DeltaT;
-    MySerial* MSerial;
-    VoltageSensor* VSensor;
+//    MySerial* MSerial;
+//    VoltageSensor* VSensor;
     MPU6050DMP* MyMPU;
 
-    trikControl::Brick controller;
+    trikControl::Brick * controller;
 
 #ifdef USE_COMPASS
     HMC5883L* MyCompass;
@@ -44,7 +44,7 @@ private:
     //  pins configuration
     //  Номера портов, по которым подключены моторы и сенсор
     //  Меняем пины моторов на силовые/серво порты
-    QString DefaultMotorPins[4];
+    QStringList DefaultMotorPins;
 
     int DefaultVSensorPin;
 
@@ -121,7 +121,8 @@ private:
     bool needPCTx;
 
 public:
-    Quadrocopter();
+    Quadrocopter(trikControl::Brick * brick);
+    ~Quadrocopter();
 
     void reset();
 
