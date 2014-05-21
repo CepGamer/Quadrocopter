@@ -1,5 +1,5 @@
 #include "Definitions.h"
-#include <QTime>
+#include <QElapsedTimer>
 
 #ifndef TIMERCOUNT_H
 #define TIMERCOUNT_H
@@ -7,7 +7,7 @@
 class TimerCount
 {
     private:
-        QTime time;
+        QElapsedTimer time;
         bool timeIsset;
     public:
         TimerCount();

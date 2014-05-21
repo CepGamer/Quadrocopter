@@ -17,7 +17,9 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "AP_Math.h"
+//#include "AP_Math.h"
+#include <math.h>
+#include "vector3.h"
 
 #define HALF_SQRT_2 0.70710678118654757f
 
@@ -242,7 +244,7 @@ T Vector3<T>::operator *(const Vector3<T> &v) const
 template <typename T>
 float Vector3<T>::length(void) const
 {
-    return pythagorous3(x, y, z);
+    return sqrt(x*x + y*y + z*z);
 }
 
 template <typename T>

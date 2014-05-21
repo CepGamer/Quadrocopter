@@ -14,12 +14,15 @@ void TimerCount::setTime()
 
 unsigned long TimerCount::getTimeDifference()
 {
-    return(time.elapsed());
+    unsigned long toRet = time.nsecsElapsed();
+    return(toRet);
 }
 
 double TimerCount::getTimeDifferenceSeconds()
 {
-    return(getTimeDifference() / 1.E3);
+    double toRet = (double)getTimeDifference();
+    toRet /= (double)1.E9;
+    return toRet;
 }
 
 bool TimerCount::getTimeIsset()

@@ -1,3 +1,6 @@
+#ifndef QUADROCOPTER_H
+#define QUADROCOPTER_H
+
 #include "Definitions.h"
 #include "MPU6050DMP.h"
 #include "RVector3D.h"
@@ -11,30 +14,36 @@
 #include "PWMJoystick.h"
 #include "LowPassFilter.h"
 
-#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
+//#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
+#include "wrappers/robotWrap.h"
 
 #include <QString>
+#include <QObject>
 
 #ifdef USE_COMPASS
     // i2cdevlib
     #include <HMC5883L.h>
 #endif
 
-#ifndef QUADROCOPTER_H
-#define QUADROCOPTER_H
-
 #define BN 60
 
-class Quadrocopter
+//  reaction type (different types of processing sensors' data)
+enum reactionType_ {ReactionNone, ReactionAngularVelocity, ReactionAcceleration, ReactionAngle};
+
+const int msec = 1000;
+const int frames = 25;
+
+class Quadrocopter : public QObject
 {
+    Q_OBJECT
 private:
-    MotorController* MController;
+    MotorController * MController;
     TimerCount DeltaT;
 //    MySerial* MSerial;
 //    VoltageSensor* VSensor;
     MPU6050DMP* MyMPU;
 
-    trikControl::Brick * controller;
+    RobotWrapper * controller;
 
 #ifdef USE_COMPASS
     HMC5883L* MyCompass;
@@ -45,22 +54,23 @@ private:
     //  Номера портов, по которым подключены моторы и сенсор
     //  Меняем пины моторов на силовые/серво порты
     QStringList DefaultMotorPins;
-
+    QTimer * mTimer;
+    QTimer * logTimer;
     int DefaultVSensorPin;
 
-    //  reaction type (different types of processing sensors' data)
-    enum reactionType_ {ReactionNone, ReactionAngularVelocity, ReactionAcceleration, ReactionAngle};
+    QFile * logFile;
+    QString logMessage;
+
     reactionType_ reactionType;
 
     //  torque corrections
     RVector3D torqueAutomaticCorrection;
-
     RVector3D angleManualCorrection;
 
-    static const double DefaultVSensorMaxVoltage = 17.95;   //  maximal voltage (before voltage divider)
+    static constexpr double DefaultVSensorMaxVoltage = 17.95;   //  maximal voltage (before voltage divider)
     //  15.16? 11.95->2.6
 
-    static const double g = 9.80665;    // gravitational acceleration
+    static constexpr double g = 9.80665;    // gravitational acceleration
 
     //physical quantities
     RVector3D angle;            // angle between Earth's coordinate and ours (filtered)
@@ -77,8 +87,8 @@ private:
 #endif
 
     //corrections
-    static const double angleMaxCorrection = MPI / 4;
-    static const double angularVelocityMaxCorrection = MPI / 4;
+    static constexpr double angleMaxCorrection = MPI / 4;
+    static constexpr double angularVelocityMaxCorrection = MPI / 4;
 
     PID pidAngleX, pidAngleY;
 
@@ -121,7 +131,7 @@ private:
     bool needPCTx;
 
 public:
-    Quadrocopter(trikControl::Brick * brick);
+    Quadrocopter(QThread * thread, bool isRobot);
     ~Quadrocopter();
 
     void reset();
@@ -145,8 +155,10 @@ public:
     RVector3D getTorques();
 
 public slots:
-
     void iteration();
+
+private slots:
+    void log();
 
 };
 

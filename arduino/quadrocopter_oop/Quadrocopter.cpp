@@ -5,31 +5,32 @@
     #include <avr/delay.h>
 #endif
 
-Quadrocopter::Quadrocopter(trikControl::Brick *brick)
-    : needPCTx(false)
+Quadrocopter::Quadrocopter(QThread *thread, bool isRobot)
+    : QObject(NULL)
+    , needPCTx(false)
     , flying(false)
 #ifdef PID_USE_YAW_ANGLE
     , serialReadN(27)   // 3 + 12 + 6 + 6
 #else
     , serialReadN(21)   // 3 + 12 + 6
 #endif
-    , reactionType(ReactionNone)
+    , reactionType(ReactionAngle)
     , forceOverrideValue(0)
     , forceOverride(true)
-    , controller(brick)
 {
 //    DefaultVSensorPin = A4;
 
-    DefaultMotorPins.append(QString ("7"));
-    DefaultMotorPins.append(QString ("8"));
-    DefaultMotorPins.append(QString ("9"));
-    DefaultMotorPins.append(QString ("10"));
+    DefaultMotorPins.append(QString ("JM1"));
+    DefaultMotorPins.append(QString ("JM2"));
+    DefaultMotorPins.append(QString ("JM3"));
+    DefaultMotorPins.append(QString ("JM4"));
 
 #ifdef DEBUG_SERIAL_SECOND
     DEBUG_SERIAL_SECOND.begin(115200);
 #endif
 
 //    MSerial = new MySerial;
+    controller = new RobotWrapper(thread, isRobot);
     MController = new MotorController(controller, DefaultMotorPins);
     //  Зачем сенсор вольтажа?
 //    VSensor = new VoltageSensor(DefaultVSensorPin, DefaultVSensorMaxVoltage);
@@ -61,7 +62,24 @@ Quadrocopter::Quadrocopter(trikControl::Brick *brick)
     MyCompass->initialize();
 #endif
 
-    Joystick = new PWMJoystick;
+    Joystick = new PWMJoystick();
+
+    mTimer = new QTimer(this);
+    mTimer->setInterval(msec / frames);
+    QObject::connect(mTimer, SIGNAL(timeout()), this, SLOT(iteration()));
+    mTimer->start();
+
+    logTimer = new QTimer(this);
+    logTimer->setInterval(msec);
+    QObject::connect(logTimer, SIGNAL(timeout()), this, SLOT(log()));
+    logTimer->start();
+
+    logMessage.clear();
+
+    logFile = new QFile("log.txt");
+    logFile->open(QFile::WriteOnly);
+
+    MController->setForce(50);
 
 #ifdef DEBUG_DAC
 //    myLed = MyMPU->myLed;
@@ -75,7 +93,8 @@ Quadrocopter::Quadrocopter(trikControl::Brick *brick)
 
 Quadrocopter::~Quadrocopter()
 {
-
+//    delete Joystick;
+//    delete mTimer;
 }
 
 void Quadrocopter::reset()
@@ -111,6 +130,7 @@ void Quadrocopter::reset()
     dtMax = 0;
 
     MyMPU->resetFIFO();
+    logMessage.clear();
 }
 
 void Quadrocopter::processCorrection()
@@ -163,9 +183,9 @@ void Quadrocopter::iteration()
 #endif
 
         { // Serial
-            processSerialGetCommand();
+//            processSerialGetCommand();
 //            myLed.setState(5);
-            processSerialDoCommand();
+//            processSerialDoCommand();
         }
 
 #ifdef DEBUG_DAC
@@ -176,6 +196,19 @@ void Quadrocopter::iteration()
         { // Sensors
             MyMPU->iteration();
             processSensorsData();
+            float * temp = MyMPU->getAngleXYZ();
+            for(int i = 0; i < DIM; i++)
+            {
+                logMessage.append(QString::number(temp[i]));
+                logMessage.append("\t");
+            }
+            logMessage.append("\n");
+            for(int i = 0; i < DIM; i++)
+            {
+                logMessage.append(QString::number(this->angleManualCorrection.valueByAxisIndex(i)));
+                logMessage.append("\t");
+            }
+            logMessage.append("\n\n");
         }
         sensorsTime = tCount.getTimeDifferenceSeconds();
 
@@ -186,7 +219,7 @@ void Quadrocopter::iteration()
 
         { // Joystick
 
-            processJoystickRx();
+//            processJoystickRx();
         }
 
         tCount.setTime();
@@ -206,6 +239,13 @@ void Quadrocopter::iteration()
 
         MyMPU->resetNewData();
     }
+}
+
+void Quadrocopter::log()
+{
+    logFile->write(logMessage.toUtf8().constData());
+    logMessage.clear();
+    logFile->flush();
 }
 
 void Quadrocopter::MPUInterrupt()

@@ -19,6 +19,7 @@
 
 //#include "AP_Math.h"
 #include <qmath.h>
+#include "matrix3.h"
 
 #define HALF_SQRT_2 0.70710678118654757
 
@@ -128,12 +129,12 @@ Vector3<T> Matrix3<T>::operator *(const Vector3<T> &v) const
 }
 
 // multiplication by a vector, extracting only the xy components
-template <typename T>
-Vector2<T> Matrix3<T>::mulXY(const Vector3<T> &v) const
-{
-    return Vector2<T>(a.x * v.x + a.y * v.y + a.z * v.z,
-                      b.x * v.x + b.y * v.y + b.z * v.z);
-}
+//template <typename T>
+//Vector2<T> Matrix3<T>::mulXY(const Vector3<T> &v) const
+//{
+//    return Vector2<T>(a.x * v.x + a.y * v.y + a.z * v.z,
+//                      b.x * v.x + b.y * v.y + b.z * v.z);
+//}
 
 // multiplication of transpose by a vector
 template <typename T>
@@ -188,7 +189,7 @@ template Vector3<float> Matrix3<float>::operator *(const Vector3<float> &v) cons
 template Vector3<float> Matrix3<float>::mul_transpose(const Vector3<float> &v) const;
 template Matrix3<float> Matrix3<float>::operator *(const Matrix3<float> &m) const;
 template Matrix3<float> Matrix3<float>::transposed(void) const;
-template Vector2<float> Matrix3<float>::mulXY(const Vector3<float> &v) const;
+//template Vector2<float> Matrix3<float>::mulXY(const Vector3<float> &v) const;
 
 #if HAL_CPU_CLASS >= HAL_CPU_CLASS_75
 template void Matrix3<double>::zero(void);
@@ -201,5 +202,5 @@ template Vector3<double> Matrix3<double>::operator *(const Vector3<double> &v) c
 template Vector3<double> Matrix3<double>::mul_transpose(const Vector3<double> &v) const;
 template Matrix3<double> Matrix3<double>::operator *(const Matrix3<double> &m) const;
 template Matrix3<double> Matrix3<double>::transposed(void) const;
-template Vector2<double> Matrix3<double>::mulXY(const Vector3<double> &v) const;
+//template Vector2<double> Matrix3<double>::mulXY(const Vector3<double> &v) const;
 #endif

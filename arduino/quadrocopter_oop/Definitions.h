@@ -1,7 +1,7 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#define M_PI 3.141592653589793
+//#define M_PI 3.141592653589793
 #define MPI  3.141592653589793
 
 #define doubleEps 1E-2
@@ -71,5 +71,11 @@
 #define STABILIZATION
 
 #define angleMPIPINorm(x) {while(x < -M_PI) {x += 2 * M_PI;} while(x > M_PI) {x -= 2 * M_PI;}}
+
+enum RobotType
+{
+    realConnection
+    , emulation
+};
 
 #endif

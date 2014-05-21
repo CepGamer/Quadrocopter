@@ -1,27 +1,28 @@
-#include "RVector3D.h"
-//  Заменил их мотор на наш.
-#include "../../trikRuntime/trikControl/src/powerMotor.h"
-#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
-#include "Definitions.h"
-
 #ifndef MOTORCONTROLLER_H
 #define MOTORCONTROLLER_H
+
+#include "RVector3D.h"
+//  Заменил их мотор на наш.
+#include "wrappers/robotWrap.h"
+#include "wrappers/motorWrap.h"
+
+#include "Definitions.h"
 
 class MotorController
 {
 private:
 
 #ifdef DEBUG_NO_MOTORS
-    static const int INIT_TIMEOUT = 0; // ms
+    static constexpr int INIT_TIMEOUT = 0; // ms
 #else
-    static const int INIT_TIMEOUT = 1000; // ms
+    static constexpr int INIT_TIMEOUT = 1000; // ms
 #endif
 
     double force;
 
     bool initialized;
     
-    static const double MIN_SPEED = 0.1;
+    static constexpr double MIN_SPEED = 0.1;
 
     enum MOTORS
     {
@@ -33,14 +34,14 @@ private:
     int direction[N_MOTORS];
 //#endif
 
-    trikControl::Motor * motors_[N_MOTORS];
+    MotorWrap * motors_[N_MOTORS];
 
     bool useMotors[N_MOTORS];
 
     RVector3D coordinatesOfMotors[N_MOTORS];
 
 public:
-    MotorController(trikControl::Brick * brick, QStringList ports);
+    MotorController(RobotWrapper * brick, QStringList ports);
     ~MotorController();
 
     double getSpeed(RVector3D torqueVec, int motor);

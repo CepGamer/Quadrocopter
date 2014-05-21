@@ -26,17 +26,13 @@ public:
 
     RVector3D operator+(RVector3D);
     RVector3D operator-(RVector3D);
-
     RVector3D operator+=(RVector3D);
     RVector3D operator-=(RVector3D);
-    
     RVector3D operator*(double);
     RVector3D operator/(double);
-    
     RVector3D operator*=(double);
     RVector3D operator/=(double);
-
-    //cross product
+    /// Return cross product of vectors
     RVector3D operator^(RVector3D);
 
     double& valueByAxisIndex(int index);

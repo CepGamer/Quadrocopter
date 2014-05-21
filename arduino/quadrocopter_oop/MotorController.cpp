@@ -1,7 +1,8 @@
 #include "MotorController.h"
 //#include "Arduino.h"
 #include "TimerCount.h"
-#include "RVector3D.h"
+
+using namespace trikControl;
 
 double MotorController::getSpeed(RVector3D torqueVec, int motor)
 {
@@ -41,7 +42,7 @@ void MotorController::setMotors(double power[N_MOTORS])
         motors_[i]->setPower(power[i]);
 }
 
-MotorController::MotorController(trikControl::Brick * brick, QStringList ports)
+MotorController::MotorController(RobotWrapper *brick, QStringList ports)
     : initialized(false)
 {
     useMotors[A] = 1;

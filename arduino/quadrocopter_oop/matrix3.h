@@ -42,6 +42,9 @@
 
 #include "vector3.h"
 
+template <typename T>
+class Vector3;
+
 // 3x3 matrix with elements of type T
 template <typename T>
 class Matrix3 {
@@ -126,7 +129,7 @@ public:
     }
 
     // allow a Matrix3 to be used as an array of vectors, 0 indexed
-    Vector3<T> & operator[](uint8_t i) {
+    Vector3<T> & operator[](quint8 i) {
         Vector3<T> *_v = &a;
 #if MATH_CHECK_INDEXES
         assert(i >= 0 && i < 3);
@@ -134,7 +137,7 @@ public:
         return _v[i];
     }
 
-    const Vector3<T> & operator[](uint8_t i) const {
+    const Vector3<T> & operator[](quint8 i) const {
         const Vector3<T> *_v = &a;
 #if MATH_CHECK_INDEXES
         assert(i >= 0 && i < 3);
@@ -149,7 +152,7 @@ public:
     Vector3<T>                  mul_transpose(const Vector3<T> &v) const;
 
     // multiplication by a vector giving a Vector2 result (XY components)
-    Vector2<T> mulXY(const Vector3<T> &v) const;
+//    Vector2<T> mulXY(const Vector3<T> &v) const;
 
     // extract x column
     Vector3<T>                  colx(void) const
@@ -221,10 +224,10 @@ public:
     void        rotateXYinv(const Vector3<T> &g);
 };
 
-typedef Matrix3<int16_t>                Matrix3i;
-typedef Matrix3<uint16_t>               Matrix3ui;
-typedef Matrix3<int32_t>                Matrix3l;
-typedef Matrix3<uint32_t>               Matrix3ul;
+typedef Matrix3<qint16>                Matrix3i;
+typedef Matrix3<quint16>               Matrix3ui;
+typedef Matrix3<qint32>                Matrix3l;
+typedef Matrix3<quint32>               Matrix3ul;
 typedef Matrix3<float>                  Matrix3f;
 #if HAL_CPU_CLASS >= HAL_CPU_CLASS_75
     typedef Matrix3<double>                 Matrix3d;

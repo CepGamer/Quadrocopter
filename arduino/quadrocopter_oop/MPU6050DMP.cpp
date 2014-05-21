@@ -43,10 +43,12 @@ THE SOFTWARE.
 
 //#include "I2Cdev.h"
 //#include "MPU6050_6Axis_MotionApps20.h"
-//#include "MPU6050DMP.h"
+#include "MPU6050DMP.h"
 #include "TimerCount.h"
 #include "Quadrocopter.h"
 #include <math.h>
+
+#include <QDebug>
 
 bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone high
 
@@ -55,6 +57,23 @@ bool mpuInterrupt = false;     // indicates whether MPU interrupt pin has gone h
 // ================================================================
 
 extern Quadrocopter *quadro;
+
+MPU6050DMP::MPU6050DMP(RobotWrapper *brck)
+    : QObject(NULL)
+{
+#ifdef DEBUG_NO_MPU
+    return;
+#endif
+    brick = brck;
+    dmpReady = false;
+    dcm.from_euler(0, 0, 0);
+    av.x = av.y = av.z = 0;
+}
+
+MPU6050DMP::~MPU6050DMP()
+{
+
+}
 
 void dmpDataReady()
 {
@@ -70,9 +89,9 @@ void dmpDataReady()
 
 float* MPU6050DMP::getAngleXYZ()
 {
-    tfloat[0] = +ypr[2];
-    tfloat[1] = +ypr[1];
-    tfloat[2] = +ypr[0];
+    tfloat[0] = +ypr.z;
+    tfloat[1] = +ypr.y;
+    tfloat[2] = +ypr.x;
     return(tfloat);
 }
 
@@ -121,7 +140,7 @@ void MPU6050DMP::resetNewData()
 #ifdef DEBUG_NO_MPU
     return;
 #endif
-    newData = false;
+    newData = true;
 }
 
 bool MPU6050DMP::getNewData()
@@ -144,16 +163,6 @@ int MPU6050DMP::getPacketSize()
     return(packetSize);
 }
 
-MPU6050DMP::MPU6050DMP(trikControl::Brick *brck)
-{
-#ifdef DEBUG_NO_MPU
-    return;
-#endif
-    brick = brck;
-    dmpReady = false;
-    dcm.from_euler(0, 0, 0);
-}
-
 void MPU6050DMP::initialize()
 {
 #ifdef DEBUG_NO_MPU
@@ -169,8 +178,7 @@ void MPU6050DMP::initialize()
 #endif
 
     // reset YPR data
-    ypr = QVector<float> (3);
-    av = QVector<int> (3);
+    ypr.zero();
     dmpReady = true;
 
 /*
@@ -204,7 +212,7 @@ void MPU6050DMP::initialize()
     }
     //else Serial.print("MPU init failed\n");
     */
-    newData = false;
+    newData = true;
 }
 
 bool MPU6050DMP::notBusy()
@@ -270,19 +278,18 @@ void MPU6050DMP::iteration()
 //        mpu.dmpGetGyro(av, fifoBuffer);
 //        mpu.dmpGetGravity(&gravity, &q);
 //        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
-    av = brick->gyroscope()->read();
+    QVector<int> x = brick->gyroscope()->read();
 
-    ypr.x = av[1];
-    ypr.y = av[1];
-    ypr.z = av[1];
+    av.x = x[0] / gyroMulConstRad;
+    av.y = x[1] / gyroMulConstRad;
+    av.z = x[2] / gyroMulConstRad;
 
-    dcm.rotate(ypr);
+    dcm.rotate(av);
 
     from_rotation_matrix();
+    dmpGetGravity();
+    dmpGetYawPitchRoll();
 
-
-
-    //mpu.dmpGetAccelFloat(acc, fifoBuffer);
 #ifdef MPUDEBUG
         getAngleXYZ();
         for(int i = 0; i < 3; i++)
@@ -340,9 +347,17 @@ void MPU6050DMP::from_rotation_matrix()
     }
 }
 
-uint8_t MPU6050::dmpGetGravity(VectorFloat *v, Quaternion *q) {
-    v -> x = 2 * (q -> x*q -> z - q -> w*q -> y);
-    v -> y = 2 * (q -> w*q -> x + q -> y*q -> z);
-    v -> z = q -> w*q -> w - q -> x*q -> x - q -> y*q -> y + q -> z*q -> z;
-    return 0;
+void MPU6050DMP::dmpGetGravity() {
+    gravity.x = 2 * (q.x()*q.z() - q.scalar()*q.y());
+    gravity.y = 2 * (q.scalar()*q.x() + q.y()*q.z());
+    gravity.z = q.scalar()*q.scalar() - q.x()*q.x() - q.y()*q.y() + q.z()*q.z();
+}
+
+void MPU6050DMP::dmpGetYawPitchRoll() {
+    // yaw: (about Z axis)
+    ypr.x = atan2(2 * q.x() * q.y() - 2 * q.scalar() * q.z(), 2 * q.scalar() * q.scalar() + 2 * q.x() * q.x() - 1);
+    // pitch: (nose up/down, about Y axis)
+    ypr.y = atan(gravity.x / sqrt(gravity.y * gravity.y + gravity.z * gravity.z));
+    // roll: (tilt left/right, about X axis)
+    ypr.z = atan(gravity.y / sqrt(gravity.x * gravity.x + gravity.z * gravity.z));
 }

@@ -1,0 +1,30 @@
+#include "gyroscopeWrap.h"
+
+GyroscopeWrap::GyroscopeWrap(trikControl::Sensor3d *gyroscope) :
+    QObject(gyroscope)
+  , isReal(true)
+  , realGyro(gyroscope)
+  , emulGyro(nullptr)
+{
+}
+
+GyroscopeWrap::GyroscopeWrap(emulators::GyroscopeEmulator *gyroscope):
+    QObject(gyroscope)
+    , isReal(false)
+    , realGyro(nullptr)
+    , emulGyro(gyroscope)
+{
+}
+
+GyroscopeWrap::~GyroscopeWrap()
+{
+
+}
+
+QVector<int> const &GyroscopeWrap::read() const
+{
+    if(isReal)
+        return realGyro->read();
+    else
+        return emulGyro->read();
+}

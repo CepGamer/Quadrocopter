@@ -44,6 +44,7 @@ THE SOFTWARE.
 #include <QQuaternion>
 #include <QVector3D>
 #include <QVector>
+#include <QObject>
 
 #ifndef MPU6050DMP_H
 #define MPU6050DMP_H
@@ -57,7 +58,8 @@ THE SOFTWARE.
 #include "matrix3.h"
 #include "vector3.h"
 
-#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
+//#include "../../trikRuntime/trikControl/include/trikControl/brick.h"
+#include "wrappers/robotWrap.h"
 
 // I2Cdev and MPU6050 must be installed as libraries, or else the .cpp/.h files
 // for both classes must be in the include path of your project
@@ -66,10 +68,12 @@ THE SOFTWARE.
 //#include "MPU6050_6Axis_MotionApps20.h"
 //#include "MPU6050.h" // not necessary if using MotionApps include file
 
-class MPU6050DMP
+const unsigned int DIM = 3;
+
+class MPU6050DMP : public QObject
 {
-static const unsigned int DIM = 3;
 //#define MPUDEBUG
+    Q_OBJECT
 private:    
     // class default I2C address is 0x68
     // specific I2C addresses may be passed as a parameter here
@@ -103,17 +107,17 @@ private:
     quint16 packetSize;     // expected DMP packet size (default is 42 bytes)
     quint16 fifoCount;      // count of all bytes currently in FIFO
     quint8 fifoBuffer[64];  // FIFO storage buffer
-    static const double maxWait = 10e-3;
+    static constexpr double maxWait = 10e-3;
 
-    static const double gyroMulConstRad = M_PI / 180 * 16.4;
+    static constexpr double gyroMulConstRad = 30000 / M_PI;
     
     // orientation/motion vars
     QQuaternion q;          // [w, x, y, z]         quaternion container
     QVector3D aa;           // [x, y, z]            accel sensor measurements
     QVector3D aaReal;       // [x, y, z]            gravity-free accel sensor measurements
     QVector3D aaWorld;      // [x, y, z]            world-frame accel sensor measurements
-    QVector3D gravity;      // [x, y, z]            gravity vector
-    QVector<float> av;      // [p, q, r]            gyro sensor measurements
+    Vector3f av;            // [p, q, r]            gyro sensor measurements
+    Vector3f gravity;       // [x, y, z]            gravity vector
     Vector3f ypr;           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
     float tfloat[DIM];
     //float acc[DIM];         // [x, y, z]            accel sensor measurements (float)
@@ -122,12 +126,15 @@ private:
     //  Represents direction cosine matrix
     Matrix3f dcm;
 
-    trikControl::Brick * brick;
+    RobotWrapper * brick;
 
     void from_rotation_matrix();
+    void dmpGetGravity();
+    void dmpGetYawPitchRoll();
 
 public:
-    MPU6050DMP(trikControl::Brick * brck);
+    explicit MPU6050DMP(RobotWrapper * brck);
+    ~MPU6050DMP();
 
     /// Initialises sensors
     void initialize();
