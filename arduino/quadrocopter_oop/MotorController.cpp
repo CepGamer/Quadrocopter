@@ -33,7 +33,10 @@ double MotorController::getSpeed(RVector3D torqueVec, int motor)
 void MotorController::setTorque(RVector3D torqueVec)
 {
     for (int i = 0; i < N_MOTORS; i++)
-        motors_[i]->setPower(getSpeed(torqueVec, i));
+    {
+        double temp = getSpeed(torqueVec, i);
+        motors_[i]->setPower(temp * 100);
+    }
 }
 
 void MotorController::setMotors(double power[N_MOTORS])

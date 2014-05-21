@@ -34,7 +34,6 @@ private:
     int direction[N_MOTORS];
 //#endif
 
-    MotorWrap * motors_[N_MOTORS];
 
     bool useMotors[N_MOTORS];
 
@@ -43,6 +42,8 @@ private:
 public:
     MotorController(RobotWrapper * brick, QStringList ports);
     ~MotorController();
+
+    MotorWrap * motors_[N_MOTORS];
 
     double getSpeed(RVector3D torqueVec, int motor);
 

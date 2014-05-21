@@ -79,8 +79,6 @@ Quadrocopter::Quadrocopter(QThread *thread, bool isRobot)
     logFile = new QFile("log.txt");
     logFile->open(QFile::WriteOnly);
 
-    MController->setForce(50);
-
 #ifdef DEBUG_DAC
 //    myLed = MyMPU->myLed;
 //    myLed.setState(0);
@@ -108,13 +106,23 @@ void Quadrocopter::reset()
     torqueAutomaticCorrection = RVector3D();
     angleManualCorrection = RVector3D();
 
-    MController->setForce(0);
+    MController->setForce(0.2);
     MController->setTorque(RVector3D());
 
     pidAngleX.reset();
     pidAngleX.setYMinYMax(angleMaxCorrection);
+    pidAngleX.setKpKiKd(100, 80, 0);
+    pidAngleX.setPMinMax(100.0);
+    pidAngleX.setIMinMax(100.0);
+    pidAngleX.setDMinMax(100.0);
+
     pidAngleY.reset();
     pidAngleY.setYMinYMax(angleMaxCorrection);
+    pidAngleY.setKpKiKd(100, 80, 0);
+    pidAngleY.setPMinMax(100.0);
+    pidAngleY.setIMinMax(100.0);
+    pidAngleY.setDMinMax(100.0);
+
 
 #ifdef PID_USE_YAW
     pidAngularVelocityZ.reset();
@@ -165,7 +173,8 @@ void Quadrocopter::processMotors()
 
 void Quadrocopter::iteration()
 {
-    if(dtMax < dt) dtMax = dt;
+    if(dtMax < dt)
+        dtMax = dt;
 
     if(MyMPU->getNewData()) // on each MPU data packet
     {
@@ -203,9 +212,9 @@ void Quadrocopter::iteration()
                 logMessage.append("\t");
             }
             logMessage.append("\n");
-            for(int i = 0; i < DIM; i++)
+            for(int i = 0; i < 4; i++)
             {
-                logMessage.append(QString::number(this->angleManualCorrection.valueByAxisIndex(i)));
+                logMessage.append(QString::number(this->MController->motors_[i]->power()));
                 logMessage.append("\t");
             }
             logMessage.append("\n\n");
