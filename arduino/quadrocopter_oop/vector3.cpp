@@ -24,7 +24,7 @@
 #define HALF_SQRT_2 0.70710678118654757f
 
 // rotate a vector by a standard rotation, attempting
-// to use the minimum number of floating point operations
+// to use the minimum number of doubleing point operations
 template <typename T>
 void Vector3<T>::rotate(enum Rotation rotation)
 {
@@ -242,7 +242,7 @@ T Vector3<T>::operator *(const Vector3<T> &v) const
 }
 
 template <typename T>
-float Vector3<T>::length(void) const
+double Vector3<T>::length(void) const
 {
     return sqrt(x*x + y*y + z*z);
 }
@@ -330,7 +330,7 @@ bool Vector3<T>::operator !=(const Vector3<T> &v) const
 }
 
 template <typename T>
-float Vector3<T>::angle(const Vector3<T> &v2) const
+double Vector3<T>::angle(const Vector3<T> &v2) const
 {
     return acosf(((*this)*v2) / (this->length()*v2.length()));
 }
@@ -354,31 +354,9 @@ Matrix3<T> Vector3<T>::mul_rowcol(const Vector3<T> &v2) const
                       v1.z * v2.x, v1.z * v2.y, v1.z * v2.z);
 }
 
-// only define for float
-template void Vector3<float>::rotate(enum Rotation);
-template float Vector3<float>::length(void) const;
-template Vector3<float> Vector3<float>::operator %(const Vector3<float> &v) const;
-template float Vector3<float>::operator *(const Vector3<float> &v) const;
-template Vector3<float> Vector3<float>::operator *(const Matrix3<float> &m) const;
-template Matrix3<float> Vector3<float>::mul_rowcol(const Vector3<float> &v) const;
-template Vector3<float> &Vector3<float>::operator *=(const float num);
-template Vector3<float> &Vector3<float>::operator /=(const float num);
-template Vector3<float> &Vector3<float>::operator -=(const Vector3<float> &v);
-template Vector3<float> &Vector3<float>::operator +=(const Vector3<float> &v);
-template Vector3<float> Vector3<float>::operator /(const float num) const;
-template Vector3<float> Vector3<float>::operator *(const float num) const;
-template Vector3<float> Vector3<float>::operator +(const Vector3<float> &v) const;
-template Vector3<float> Vector3<float>::operator -(const Vector3<float> &v) const;
-template Vector3<float> Vector3<float>::operator -(void) const;
-template bool Vector3<float>::operator ==(const Vector3<float> &v) const;
-template bool Vector3<float>::operator !=(const Vector3<float> &v) const;
-template bool Vector3<float>::is_nan(void) const;
-template bool Vector3<float>::is_inf(void) const;
-template float Vector3<float>::angle(const Vector3<float> &v) const;
-
-#if HAL_CPU_CLASS >= HAL_CPU_CLASS_75
+// only define for double
 template void Vector3<double>::rotate(enum Rotation);
-template float Vector3<double>::length(void) const;
+template double Vector3<double>::length(void) const;
 template Vector3<double> Vector3<double>::operator %(const Vector3<double> &v) const;
 template double Vector3<double>::operator *(const Vector3<double> &v) const;
 template Vector3<double> Vector3<double>::operator *(const Matrix3<double> &m) const;
@@ -396,5 +374,4 @@ template bool Vector3<double>::operator ==(const Vector3<double> &v) const;
 template bool Vector3<double>::operator !=(const Vector3<double> &v) const;
 template bool Vector3<double>::is_nan(void) const;
 template bool Vector3<double>::is_inf(void) const;
-template float Vector3<double>::angle(const Vector3<double> &v) const;
-#endif
+template double Vector3<double>::angle(const Vector3<double> &v) const;

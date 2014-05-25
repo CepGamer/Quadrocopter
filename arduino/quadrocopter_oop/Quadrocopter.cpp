@@ -106,19 +106,19 @@ void Quadrocopter::reset()
     torqueAutomaticCorrection = RVector3D();
     angleManualCorrection = RVector3D();
 
-    MController->setForce(0.2);
+    MController->setForce(0.58);
     MController->setTorque(RVector3D());
 
     pidAngleX.reset();
     pidAngleX.setYMinYMax(angleMaxCorrection);
-    pidAngleX.setKpKiKd(100, 80, 0);
+    pidAngleX.setKpKiKd(0.6, 0.3, 0);
     pidAngleX.setPMinMax(100.0);
     pidAngleX.setIMinMax(100.0);
     pidAngleX.setDMinMax(100.0);
 
     pidAngleY.reset();
     pidAngleY.setYMinYMax(angleMaxCorrection);
-    pidAngleY.setKpKiKd(100, 80, 0);
+    pidAngleY.setKpKiKd(0.6, 0.3, 0);
     pidAngleY.setPMinMax(100.0);
     pidAngleY.setIMinMax(100.0);
     pidAngleY.setDMinMax(100.0);
@@ -166,9 +166,10 @@ void Quadrocopter::processMotors()
     if(MController->getForce() >= MINIMUM_FLYING_THROTTLE)
         flyingTime += dt;
     if(flyingTime >= MINIMUM_FLYING_TIME)
+    {
         flying = true;
-
-    MController->setTorque(getTorques());
+        MController->setTorque(getTorques());
+    }
 }
 
 void Quadrocopter::iteration()
@@ -202,23 +203,26 @@ void Quadrocopter::iteration()
 #endif
 
         tCount.setTime();
-        { // Sensors
-            MyMPU->iteration();
-            processSensorsData();
-            float * temp = MyMPU->getAngleXYZ();
-            for(int i = 0; i < DIM; i++)
-            {
-                logMessage.append(QString::number(temp[i]));
-                logMessage.append("\t");
-            }
-            logMessage.append("\n");
-            for(int i = 0; i < 4; i++)
-            {
-                logMessage.append(QString::number(this->MController->motors_[i]->power()));
-                logMessage.append("\t");
-            }
-            logMessage.append("\n\n");
+        // Sensors
+
+        MyMPU->iteration(dt);
+        processSensorsData();
+        double * temp = MyMPU->getAngleXYZ();
+        for(int i = 0; i < 4; i++)
+        {
+            logMessage.append(QString::number(this->MController->motors_[i]->power()));
+            logMessage.append("\t");
         }
+        logMessage.append("\n");
+        for(int i = 0; i < DIM; i++)
+        {
+            logMessage.append(QString::number(temp[i], 'f', 6));
+            logMessage.append("\t");
+        }
+
+        logMessage.append("\n");
+        logMessage.append(QString::number(dt));
+        logMessage.append("\n\n");
         sensorsTime = tCount.getTimeDifferenceSeconds();
 
 #ifdef DEBUG_DAC
@@ -232,13 +236,13 @@ void Quadrocopter::iteration()
         }
 
         tCount.setTime();
-        { // Corrections, Motors
-            dt = DeltaT.getTimeDifferenceSeconds();
+        // Corrections, Motors
+        dt = DeltaT.getTimeDifferenceSeconds();
 
-            processCorrection();
-            DeltaT.setTime();
-            processMotors();
-        }
+        processCorrection();
+        DeltaT.setTime();
+        processMotors();
+
         calculationsTime = tCount.getTimeDifferenceSeconds();
 
 

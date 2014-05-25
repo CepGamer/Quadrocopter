@@ -26,7 +26,7 @@ private:
 
     enum MOTORS
     {
-        A, B, C, D, N_MOTORS
+        A = 0, B = 1, C = 2, D = 3, N_MOTORS = 4
     };
 
 //#ifdef PID_USE_YAW

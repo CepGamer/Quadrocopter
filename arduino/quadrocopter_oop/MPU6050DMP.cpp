@@ -87,28 +87,28 @@ void dmpDataReady()
     quadro->MPUInterrupt();
 }
 
-float* MPU6050DMP::getAngleXYZ()
+double* MPU6050DMP::getAngleXYZ()
 {
-    tfloat[0] = +ypr.z;
-    tfloat[1] = +ypr.y;
-    tfloat[2] = +ypr.x;
-    return(tfloat);
+    tdouble[0] = +ypr.z;
+    tdouble[1] = +ypr.y;
+    tdouble[2] = +ypr.x;
+    return(tdouble);
 }
 
-float *MPU6050DMP::getAngularVelocityXYZ()
+double *MPU6050DMP::getAngularVelocityXYZ()
 {
-    tfloat[0] = av[0] * gyroMulConstRad;
-    tfloat[1] = av[1] * gyroMulConstRad;
-    tfloat[2] = av[2] * gyroMulConstRad;
-    return(tfloat);
+    tdouble[0] = av[0] * gyroMulConstRad;
+    tdouble[1] = av[1] * gyroMulConstRad;
+    tdouble[2] = av[2] * gyroMulConstRad;
+    return(tdouble);
 }
 
-//float *MPU6050DMP::getAccelXYZ()
+//double *MPU6050DMP::getAccelXYZ()
 //{
-//    tfloat[0] = acc[0];
-//    tfloat[1] = acc[1];
-//    tfloat[2] = acc[2];
-//    return(tfloat);
+//    tdouble[0] = acc[0];
+//    tdouble[1] = acc[1];
+//    tdouble[2] = acc[2];
+//    return(tdouble);
 //}
 
 void MPU6050DMP::attachFIFOInterrupt()
@@ -231,12 +231,12 @@ void MPU6050DMP::processInterrupt()
     newData = true;
 }
 
-void MPU6050DMP::iteration()
+void MPU6050DMP::iteration(double dt)
 {
 #ifdef DEBUG_NO_MPU
     return;
 #endif
-    if(!dmpReady) return;
+    if(!dmpReady || dt > 0.2) return;
 
 #ifdef DEBUG_DAC
     myLed.setState(20);
@@ -278,11 +278,19 @@ void MPU6050DMP::iteration()
 //        mpu.dmpGetGyro(av, fifoBuffer);
 //        mpu.dmpGetGravity(&gravity, &q);
 //        mpu.dmpGetYawPitchRoll(ypr, &q, &gravity);
+#ifdef DEBUG
+    int speeds[4];
+    for (int i = 0; i < 4; ++i) {
+        speeds[i] = brick->motor(brick->powerMotorPorts()[i])->power();
+    }
+    QVector<int> x = brick->gyroscope()->readRenewed(speeds);
+#else
     QVector<int> x = brick->gyroscope()->read();
+#endif
 
-    av.x = x[0] / gyroMulConstRad;
-    av.y = x[1] / gyroMulConstRad;
-    av.z = x[2] / gyroMulConstRad;
+    av.x = x[0] / gyroMulConstRad * dt;
+    av.y = x[1] / gyroMulConstRad * dt;
+    av.z = x[2] / gyroMulConstRad * dt;
 
     dcm.rotate(av);
 
@@ -294,15 +302,15 @@ void MPU6050DMP::iteration()
         getAngleXYZ();
         for(int i = 0; i < 3; i++)
         {
-            if(tfloat[i] > 0) Serial.print("+");
-            Serial.print(tfloat[i]);
+            if(tdouble[i] > 0) Serial.print("+");
+            Serial.print(tdouble[i]);
             Serial.print("\t");
         }
         getAngularVelocityXYZ();
         for(int i = 0; i < 3; i++)
         {
-            if(tfloat[i] > 0) Serial.print("+");
-            Serial.print(tfloat[i]);
+            if(tdouble[i] > 0) Serial.print("+");
+            Serial.print(tdouble[i]);
             Serial.print("\t");
         }
         Serial.print("\n");
@@ -318,28 +326,28 @@ void MPU6050DMP::iteration()
 //  Code from: http://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/index.htm
 void MPU6050DMP::from_rotation_matrix()
 {
-    float tr = dcm.a.x + dcm.b.y + dcm.c.z;
+    double tr = dcm.a.x + dcm.b.y + dcm.c.z;
 
     if (tr > 0) {
-        float S = sqrtf(tr+1) * 2;
+        double S = sqrtf(tr+1) * 2;
         q.setScalar(0.25f * S);
         q.setX((dcm.c.y - dcm.b.z) / S);
         q.setY((dcm.a.z - dcm.c.x) / S);
         q.setZ((dcm.b.x - dcm.a.y) / S);
     } else if ((dcm.a.x > dcm.b.y) && (dcm.a.x > dcm.c.z)) {
-        float S = sqrtf(1.0 + dcm.a.x - dcm.b.y - dcm.c.z) * 2;
+        double S = sqrtf(1.0 + dcm.a.x - dcm.b.y - dcm.c.z) * 2;
         q.setScalar((dcm.c.y - dcm.b.z) / S);
         q.setX(0.25f * S);
         q.setY((dcm.a.y + dcm.b.x) / S);
         q.setZ((dcm.a.z + dcm.c.x) / S);
     } else if (dcm.b.y > dcm.c.z) {
-        float S = sqrtf(1.0 + dcm.b.y - dcm.a.x - dcm.c.z) * 2;
+        double S = sqrtf(1.0 + dcm.b.y - dcm.a.x - dcm.c.z) * 2;
         q.setScalar((dcm.a.z - dcm.c.x) / S);
         q.setX((dcm.a.y + dcm.b.x) / S);
         q.setY(0.25f * S);
         q.setZ((dcm.b.z + dcm.c.y) / S);
     } else {
-        float S = sqrtf(1.0 + dcm.c.z - dcm.a.x - dcm.b.y) * 2;
+        double S = sqrtf(1.0 + dcm.c.z - dcm.a.x - dcm.b.y) * 2;
         q.setScalar((dcm.b.x - dcm.a.y) / S);
         q.setX((dcm.a.z + dcm.c.x) / S);
         q.setY((dcm.b.z + dcm.c.y) / S);
@@ -348,16 +356,17 @@ void MPU6050DMP::from_rotation_matrix()
 }
 
 void MPU6050DMP::dmpGetGravity() {
-    gravity.x = 2 * (q.x()*q.z() - q.scalar()*q.y());
-    gravity.y = 2 * (q.scalar()*q.x() + q.y()*q.z());
-    gravity.z = q.scalar()*q.scalar() - q.x()*q.x() - q.y()*q.y() + q.z()*q.z();
+//    gravity.x = 2 * (q.x()*q.z() - q.scalar()*q.y());
+//    gravity.y = 2 * (q.scalar()*q.x() + q.y()*q.z());
+//    gravity.z = q.scalar()*q.scalar() - q.x()*q.x() - q.y()*q.y() + q.z()*q.z();
 }
 
 void MPU6050DMP::dmpGetYawPitchRoll() {
-    // yaw: (about Z axis)
-    ypr.x = atan2(2 * q.x() * q.y() - 2 * q.scalar() * q.z(), 2 * q.scalar() * q.scalar() + 2 * q.x() * q.x() - 1);
-    // pitch: (nose up/down, about Y axis)
-    ypr.y = atan(gravity.x / sqrt(gravity.y * gravity.y + gravity.z * gravity.z));
-    // roll: (tilt left/right, about X axis)
-    ypr.z = atan(gravity.y / sqrt(gravity.x * gravity.x + gravity.z * gravity.z));
+    dcm.to_euler(&ypr.x, &ypr.y, &ypr.z);
+//    // yaw: (about Z axis)
+//    ypr.x = atan2(2 * q.x() * q.y() - 2 * q.scalar() * q.z(), 2 * q.scalar() * q.scalar() + 2 * q.x() * q.x() - 1);
+//    // pitch: (nose up/down, about Y axis)
+//    ypr.y = atan(gravity.x / sqrt(gravity.y * gravity.y + gravity.z * gravity.z));
+//    // roll: (tilt left/right, about X axis)
+//    ypr.z = atan(gravity.y / sqrt(gravity.x * gravity.x + gravity.z * gravity.z));
 }

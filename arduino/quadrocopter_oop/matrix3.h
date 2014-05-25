@@ -34,7 +34,7 @@
 // Matrix3ui	3x3 matrix of unsigned integers
 // Matrix3l		3x3 matrix of signed longs
 // Matrix3ul	3x3 matrix of unsigned longs
-// Matrix3f		3x3 matrix of signed floats
+// Matrix3f		3x3 matrix of signed doubles
 //
 
 #ifndef MATRIX3_H
@@ -206,10 +206,10 @@ public:
     }
 
     // create a rotation matrix from Euler angles
-    void        from_euler(float roll, float pitch, float yaw);
+    void        from_euler(double roll, double pitch, double yaw);
 
     // create eulers from a rotation matrix
-    void        to_euler(float *roll, float *pitch, float *yaw) const;
+    void        to_euler(double *roll, double *pitch, double *yaw) const;
 
     // apply an additional rotation from a body frame gyro vector
     // to a rotation matrix.
@@ -228,7 +228,7 @@ typedef Matrix3<qint16>                Matrix3i;
 typedef Matrix3<quint16>               Matrix3ui;
 typedef Matrix3<qint32>                Matrix3l;
 typedef Matrix3<quint32>               Matrix3ul;
-typedef Matrix3<float>                  Matrix3f;
+typedef Matrix3<double>                  Matrix3f;
 #if HAL_CPU_CLASS >= HAL_CPU_CLASS_75
     typedef Matrix3<double>                 Matrix3d;
 #endif

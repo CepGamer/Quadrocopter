@@ -6,7 +6,7 @@ using namespace trikControl;
 
 double MotorController::getSpeed(RVector3D torqueVec, int motor)
 {
-    double res = getForce();
+    double res = force;
     res += torqueVec.x * coordinatesOfMotors[motor].y - torqueVec.y * coordinatesOfMotors[motor].x;
 
 //#ifdef PID_USE_YAW
@@ -17,12 +17,12 @@ double MotorController::getSpeed(RVector3D torqueVec, int motor)
 //#endif
 
     // it is necessary because the motor controller starts a motor with greater speed than needed
-    if (res <= MIN_SPEED && getForce() != 0) res = MIN_SPEED;
+    if (res <= MIN_SPEED && force != 0) res = MIN_SPEED;
 
     if(res > 1) res = 1;
 
     // motors offline
-    if(getForce() < MIN_SPEED) res = 0;
+    if(force < MIN_SPEED) res = 0;
 
     // use_motors implementation
     if(!useMotors[motor]) res = 0;

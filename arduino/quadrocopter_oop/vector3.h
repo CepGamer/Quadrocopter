@@ -189,7 +189,7 @@ public:
     Vector3<T> operator %(const Vector3<T> &v) const;
 
     // computes the angle between this vector and another vector
-    float angle(const Vector3<T> &v2) const;
+    double angle(const Vector3<T> &v2) const;
 
     // check if any elements are NAN
     bool is_nan(void) const;
@@ -210,7 +210,7 @@ public:
     }
 
     // gets the length of this vector
-    float length(void) const;
+    double length(void) const;
 
     // normalizes this vector
     void normalize()
@@ -257,7 +257,7 @@ typedef Vector3<qint16>                 Vector3i;
 typedef Vector3<quint16>                Vector3ui;
 typedef Vector3<qint32>                 Vector3l;
 typedef Vector3<quint32>                Vector3ul;
-typedef Vector3<float>                  Vector3f;
+typedef Vector3<double>                  Vector3f;
 #if HAL_CPU_CLASS >= HAL_CPU_CLASS_75
     typedef Vector3<double>                 Vector3d;
 #endif

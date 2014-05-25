@@ -21,5 +21,6 @@ signals:
 
 public slots:
     const QVector<int> &read() const;
+    const QVector<int> &readRenewed(int *speeds) const;
 
 };

@@ -38,7 +38,7 @@ RVector3D RVector3D::operator =(double xyz)
     return(*this);
 }
 
-void RVector3D::parseFloat(float * a)
+void RVector3D::parsedouble(double * a)
 {
     x = a[0];
     y = a[1];

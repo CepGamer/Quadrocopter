@@ -13,7 +13,7 @@ public:
     RVector3D(double xyz);
 
     RVector3D operator=(double);
-    void parseFloat(float*);
+    void parsedouble(double*);
 
     //length squared
     double moduleSq();

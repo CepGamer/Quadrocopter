@@ -28,3 +28,9 @@ QVector<int> const &GyroscopeWrap::read() const
     else
         return emulGyro->read();
 }
+
+const QVector<int> &GyroscopeWrap::readRenewed(int * speeds) const
+{
+    if(!isReal)
+        return emulGyro->readRenewed(speeds);
+}

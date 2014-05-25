@@ -26,14 +26,14 @@
 // create a rotation matrix given some euler angles
 // this is based on http://gentlenav.googlecode.com/files/EulerAngles.pdf
 template <typename T>
-void Matrix3<T>::from_euler(float roll, float pitch, float yaw)
+void Matrix3<T>::from_euler(double roll, double pitch, double yaw)
 {
-    float cp = qCos(pitch);
-    float sp = qSin(pitch);
-    float sr = qSin(roll);
-    float cr = qCos(roll);
-    float sy = qSin(yaw);
-    float cy = qCos(yaw);
+    double cp = qCos(pitch);
+    double sp = qSin(pitch);
+    double sr = qSin(roll);
+    double cr = qCos(roll);
+    double sy = qSin(yaw);
+    double cy = qCos(yaw);
 
     a.x = cp * cy;
     a.y = (sr * sp * cy) - (cr * sy);
@@ -49,7 +49,7 @@ void Matrix3<T>::from_euler(float roll, float pitch, float yaw)
 // calculate euler angles from a rotation matrix
 // this is based on http://gentlenav.googlecode.com/files/EulerAngles.pdf
 template <typename T>
-void Matrix3<T>::to_euler(float *roll, float *pitch, float *yaw) const
+void Matrix3<T>::to_euler(double *roll, double *pitch, double *yaw) const
 {
     if (pitch != NULL) {
         *pitch = -qAsin(c.x);
@@ -178,29 +178,16 @@ void Matrix3<T>::zero(void)
 }
 
 
-// only define for float
-template void Matrix3<float>::zero(void);
-template void Matrix3<float>::rotate(const Vector3<float> &g);
-template void Matrix3<float>::rotateXY(const Vector3<float> &g);
-template void Matrix3<float>::rotateXYinv(const Vector3<float> &g);
-template void Matrix3<float>::from_euler(float roll, float pitch, float yaw);
-template void Matrix3<float>::to_euler(float *roll, float *pitch, float *yaw) const;
-template Vector3<float> Matrix3<float>::operator *(const Vector3<float> &v) const;
-template Vector3<float> Matrix3<float>::mul_transpose(const Vector3<float> &v) const;
-template Matrix3<float> Matrix3<float>::operator *(const Matrix3<float> &m) const;
-template Matrix3<float> Matrix3<float>::transposed(void) const;
-//template Vector2<float> Matrix3<float>::mulXY(const Vector3<float> &v) const;
-
-#if HAL_CPU_CLASS >= HAL_CPU_CLASS_75
+// only define for double
 template void Matrix3<double>::zero(void);
 template void Matrix3<double>::rotate(const Vector3<double> &g);
 template void Matrix3<double>::rotateXY(const Vector3<double> &g);
 template void Matrix3<double>::rotateXYinv(const Vector3<double> &g);
-template void Matrix3<double>::from_euler(float roll, float pitch, float yaw);
-template void Matrix3<double>::to_euler(float *roll, float *pitch, float *yaw) const;
+template void Matrix3<double>::from_euler(double roll, double pitch, double yaw);
+template void Matrix3<double>::to_euler(double *roll, double *pitch, double *yaw) const;
 template Vector3<double> Matrix3<double>::operator *(const Vector3<double> &v) const;
 template Vector3<double> Matrix3<double>::mul_transpose(const Vector3<double> &v) const;
 template Matrix3<double> Matrix3<double>::operator *(const Matrix3<double> &m) const;
 template Matrix3<double> Matrix3<double>::transposed(void) const;
 //template Vector2<double> Matrix3<double>::mulXY(const Vector3<double> &v) const;
-#endif
+

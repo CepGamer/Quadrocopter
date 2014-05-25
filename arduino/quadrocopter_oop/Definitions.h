@@ -6,6 +6,8 @@
 
 #define doubleEps 1E-2
 
+#define DEBUG
+
 // Architecture
 //#ifdef __arm__
 //  #define _arch_arm_

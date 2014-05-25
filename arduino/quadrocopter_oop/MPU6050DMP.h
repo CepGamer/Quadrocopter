@@ -119,8 +119,8 @@ private:
     Vector3f av;            // [p, q, r]            gyro sensor measurements
     Vector3f gravity;       // [x, y, z]            gravity vector
     Vector3f ypr;           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
-    float tfloat[DIM];
-    //float acc[DIM];         // [x, y, z]            accel sensor measurements (float)
+    double tdouble[DIM];
+    //double acc[DIM];         // [x, y, z]            accel sensor measurements (double)
     bool newData;
 
     //  Represents direction cosine matrix
@@ -139,12 +139,12 @@ public:
     /// Initialises sensors
     void initialize();
     bool notBusy();
-    void iteration();
+    void iteration(double dt);
     void processInterrupt();
 
-    float* getAngleXYZ();
-    float* getAngularVelocityXYZ();
-    //float* getAccelXYZ();
+    double* getAngleXYZ();
+    double* getAngularVelocityXYZ();
+    //double* getAccelXYZ();
 
     void attachFIFOInterrupt();
     int bytesAvailableFIFO();

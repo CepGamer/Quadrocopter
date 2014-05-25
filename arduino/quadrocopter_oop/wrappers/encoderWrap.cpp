@@ -16,7 +16,7 @@ EncoderWrap::EncoderWrap(emulators::EncoderEmulator *encoder)
 {
 }
 
-float EncoderWrap::read()
+double EncoderWrap::read()
 {
 	if (mHasRealDevice)
 	{

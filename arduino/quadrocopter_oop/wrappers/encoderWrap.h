@@ -15,7 +15,7 @@ public:
 	~EncoderWrap() {}
 public slots:
 	/// Returns current encoder reading.
-	float read();
+	double read();
 
 	/// Resets encoder by setting current reading to 0.
 	void reset();
