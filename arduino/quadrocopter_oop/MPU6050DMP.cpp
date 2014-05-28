@@ -84,7 +84,7 @@ void dmpDataReady()
     interrupts();
 #endif
     mpuInterrupt = true;
-    quadro->MPUInterrupt();
+//    quadro->MPUInterrupt();
 }
 
 double* MPU6050DMP::getAngleXYZ()

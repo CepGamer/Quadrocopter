@@ -2,7 +2,7 @@
 
 #include <QtCore/QThread>
 
-#include "trikControl/brick.h"
+#include "../../../trikRuntime/trikControl/include/trikControl/brick.h"
 #include "../../../routeBuilder-master/emulatorTest/brickEmulator.h"
 
 #include "motorWrap.h"
@@ -35,7 +35,7 @@ public slots:
 protected:
 	bool mHasRealRobot;
 	trikControl::Brick *mBrick;
-	emulators::BrickEmulator *mBrickEmulator;
+    emulators::BrickEmulator *mBrickEmulator;
 
 	QHash<QString, MotorWrap *> mMotorWrappers;
 	QHash<QString, EncoderWrap *> mEncoderWrappers;
@@ -43,6 +43,6 @@ protected:
     GyroscopeWrap * mGyro;
 
 	void wrapRealDevices();
-	void wrapEmulators();
+    void wrapEmulators();
 };
 

@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include <QApplication>
 #include "quadro.h"
 #include "serial.h"
 #include <iostream>

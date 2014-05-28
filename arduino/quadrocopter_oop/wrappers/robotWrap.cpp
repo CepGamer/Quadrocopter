@@ -44,8 +44,7 @@ void RobotWrapper::wrapRealDevices()
 			mEncoderWrappers.insert(encPort, new EncoderWrap(mBrick->encoder(encPort)));
 		}
 	}
-
-	foreach (QString const &motorPort, mBrick->motorPorts(trikControl::Motor::powerMotor))
+    foreach (QString const &motorPort, mBrick->motorPorts(trikControl::Motor::powerMotor))
 	{
 		mMotorWrappers.insert(motorPort, new MotorWrap(mBrick->motor(motorPort)));
 	}

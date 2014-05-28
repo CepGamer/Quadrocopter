@@ -22,7 +22,7 @@ void Quadro::on_actionQuadroReset_triggered()
 
 void Quadro::on_quadro_device_textChanged(const QString &arg1)
 {
-    quadro.setDevice(arg1.toAscii().data());
+    quadro.setDevice(arg1.toUtf8().data());
     settings_data();
 }
 
@@ -34,7 +34,7 @@ void Quadro::on_reaction_type_currentIndexChanged(int index)
 
 void Quadro::on_quadro_device_currentIndexChanged(const QString &arg1)
 {
-    quadro.setDevice(arg1.toAscii().data());
+    quadro.setDevice(arg1.toUtf8().data());
     settings_data();
 }
 
@@ -217,7 +217,7 @@ void Quadro::on_logfileaction_clicked()
         save_filename = "../log/quadro_";
         save_filename.append(t_time.getTime());
         save_filename.append("_");
-        save_filename.append(ui->flightname->text().toAscii().data());
+        save_filename.append(ui->flightname->text().toUtf8().data());
         save_filename.append(".txt");
         save_open();
         ui->logfileaction->setText("Close");
@@ -246,7 +246,7 @@ void Quadro::on_angle_offset_z_valueChanged(double arg1)
 void Quadro::on_track_browse_clicked()
 {
     track_filename = QFileDialog::getOpenFileName(this,
-             tr("Open track file"), "../track", tr("Quadro track file (*.txt)")).toAscii().data();
+             tr("Open track file"), "../track", tr("Quadro track file (*.txt)")).toUtf8().data();
 
     qDebug() << "Opening" << track_filename.c_str();
 

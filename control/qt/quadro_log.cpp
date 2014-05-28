@@ -18,7 +18,7 @@ using std::getline;
 void Quadro::on_log_browse_clicked()
 {
     log_filename = QFileDialog::getOpenFileName(this,
-             tr("Open log file"), "../log", tr("Quadro log (*.txt)")).toAscii().data();
+             tr("Open log file"), "../log", tr("Quadro log (*.txt)")).toUtf8().data();
 
     qDebug() << "Opening" << log_filename.c_str();
 

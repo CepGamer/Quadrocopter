@@ -72,6 +72,8 @@
 //  Отключает запрос с пульта управления и ориентируется по углам 0 0 0
 #define STABILIZATION
 
+#define LOG
+
 #define angleMPIPINorm(x) {while(x < -M_PI) {x += 2 * M_PI;} while(x > M_PI) {x -= 2 * M_PI;}}
 
 enum RobotType

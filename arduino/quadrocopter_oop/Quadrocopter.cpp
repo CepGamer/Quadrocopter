@@ -106,7 +106,7 @@ void Quadrocopter::reset()
     torqueAutomaticCorrection = RVector3D();
     angleManualCorrection = RVector3D();
 
-    MController->setForce(0.58);
+    MController->setForce(0.0);
     MController->setTorque(RVector3D());
 
     pidAngleX.reset();
@@ -168,7 +168,7 @@ void Quadrocopter::processMotors()
     if(flyingTime >= MINIMUM_FLYING_TIME)
     {
         flying = true;
-        MController->setTorque(getTorques());
+//        MController->setTorque(getTorques());
     }
 }
 
@@ -208,6 +208,7 @@ void Quadrocopter::iteration()
         MyMPU->iteration(dt);
         processSensorsData();
         double * temp = MyMPU->getAngleXYZ();
+#ifdef LOG
         for(int i = 0; i < 4; i++)
         {
             logMessage.append(QString::number(this->MController->motors_[i]->power()));
@@ -221,8 +222,9 @@ void Quadrocopter::iteration()
         }
 
         logMessage.append("\n");
-        logMessage.append(QString::number(dt));
+        logMessage.append(QString::number(dt, 'f', 6));
         logMessage.append("\n\n");
+#endif
         sensorsTime = tCount.getTimeDifferenceSeconds();
 
 #ifdef DEBUG_DAC
