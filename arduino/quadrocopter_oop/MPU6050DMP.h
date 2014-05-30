@@ -122,6 +122,8 @@ private:
     double tdouble[DIM];
     //double acc[DIM];         // [x, y, z]            accel sensor measurements (double)
     bool newData;
+    float _renorm_val_sum;
+    int _renorm_val_count;
 
     //  Represents direction cosine matrix
     Matrix3f dcm;
@@ -131,6 +133,7 @@ private:
     void from_rotation_matrix();
     void dmpGetGravity();
     void dmpGetYawPitchRoll();
+    /// Matrix normalization
 
 public:
     explicit MPU6050DMP(RobotWrapper * brck);
@@ -150,6 +153,7 @@ public:
     int bytesAvailableFIFO();
     void resetNewData();
     bool getNewData();
+    void normalize();
 
     void resetFIFO();
 

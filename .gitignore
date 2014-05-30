@@ -20,8 +20,10 @@ arduino/quadrocopter_oop_ino/
 
 arduino/build-*
 
+arduino/quadrocopter_oop/quadrocopter_oop
 arduino/quadrocopter_oop/KalmanFilter.cpp
 arduino/quadrocopter_oop/KalmanFilter.h
+arduino/quadrocopter_oop/*.sh
 
 *.autosave
 *~

@@ -294,6 +294,8 @@ void MPU6050DMP::iteration(double dt)
 
     dcm.rotate(av);
 
+    normalize();
+
     from_rotation_matrix();
     dmpGetGravity();
     dmpGetYawPitchRoll();
@@ -368,5 +370,71 @@ void MPU6050DMP::dmpGetYawPitchRoll() {
 //    // pitch: (nose up/down, about Y axis)
 //    ypr.y = atan(gravity.x / sqrt(gravity.y * gravity.y + gravity.z * gravity.z));
 //    // roll: (tilt left/right, about X axis)
-//    ypr.z = atan(gravity.y / sqrt(gravity.x * gravity.x + gravity.z * gravity.z));
+    //    ypr.z = atan(gravity.y / sqrt(gravity.x * gravity.x + gravity.z * gravity.z));
+}
+
+void MPU6050DMP::normalize(void)
+{
+    float error;
+    Vector3f t0, t1, t2;
+
+    error = dcm.a * dcm.b;                                              // eq.18
+
+    t0 = dcm.a - (dcm.b * (0.5f * error));              // eq.19
+    t1 = dcm.b - (dcm.a * (0.5f * error));              // eq.19
+    t2 = t0 % t1;                                                       // c= a x b // eq.20
+
+    if (!renorm(t0, dcm.a) ||
+        !renorm(t1, dcm.b) ||
+        !renorm(t2, dcm.c)) {
+        // Our solution is blowing up and we will force back
+        // to last euler angles
+//        _last_failure_ms = hal.scheduler->millis();
+//        reset(true);
+    }
+}
+
+bool MPU6050DMP::renorm(Vector3f const &a, Vector3f &result)
+{
+    float renorm_val;
+
+    // numerical errors will slowly build up over time in DCM,
+    // causing inaccuracies. We can keep ahead of those errors
+    // using the renormalization technique from the DCM IMU paper
+    // (see equations 18 to 21).
+
+    // For APM we don't bother with the taylor expansion
+    // optimisation from the paper as on our 2560 CPU the cost of
+    // the sqrt() is 44 microseconds, and the small time saving of
+    // the taylor expansion is not worth the potential of
+    // additional error buildup.
+
+    // Note that we can get significant renormalisation values
+    // when we have a larger delta_t due to a glitch eleswhere in
+    // APM, such as a I2c timeout or a set of EEPROM writes. While
+    // we would like to avoid these if possible, if it does happen
+    // we don't want to compound the error by making DCM less
+    // accurate.
+
+    renorm_val = 1.0f / a.length();
+
+    // keep the average for reporting
+    _renorm_val_sum += renorm_val;
+    _renorm_val_count++;
+
+    if (!(renorm_val < 2.0f && renorm_val > 0.5f)) {
+        // this is larger than it should get - log it as a warning
+        if (!(renorm_val < 1.0e6f && renorm_val > 1.0e-6f)) {
+            // we are getting values which are way out of
+            // range, we will reset the matrix and hope we
+            // can recover our attitude using drift
+            // correction before we hit the ground!
+            //Serial.printf("ERROR: DCM renormalisation error. renorm_val=%f\n",
+            //	   renorm_val);
+            return false;
+        }
+    }
+
+    result = a * renorm_val;
+    return true;
 }
