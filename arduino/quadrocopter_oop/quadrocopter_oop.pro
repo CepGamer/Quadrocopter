@@ -27,7 +27,6 @@ LIBS += -L$$EMUL_BINDIR -lemtest -L$$TRIKCONTROL_BINDIR -ltrikControl-x86-d
 # Input
 HEADERS += \
     ComplementaryFilter.h \
-    DAC8512.h \
     Definitions.h \
     LowPassFilter.h \
     MotorController.h \
@@ -45,7 +44,6 @@ HEADERS += \
     wrappers/robotWrap.h
 
 SOURCES += \
-    DAC8512.cpp \
     MotorController.cpp \
     MPU6050DMP.cpp \
     PID.cpp \

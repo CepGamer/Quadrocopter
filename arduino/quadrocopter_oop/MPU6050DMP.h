@@ -120,6 +120,7 @@ private:
     Vector3f gravity;       // [x, y, z]            gravity vector
     Vector3f ypr;           // [yaw, pitch, roll]   yaw/pitch/roll container and gravity vector
     double tdouble[DIM];
+    double quat[4];
     //double acc[DIM];         // [x, y, z]            accel sensor measurements (double)
     bool newData;
     float _renorm_val_sum;
@@ -134,6 +135,8 @@ private:
     void dmpGetGravity();
     void dmpGetYawPitchRoll();
     /// Matrix normalization
+    void normalize();
+    bool renorm(Vector3f const &a, Vector3f &result);
 
 public:
     explicit MPU6050DMP(RobotWrapper * brck);
@@ -148,12 +151,12 @@ public:
     double* getAngleXYZ();
     double* getAngularVelocityXYZ();
     //double* getAccelXYZ();
+    double *getQuaternion();
 
     void attachFIFOInterrupt();
     int bytesAvailableFIFO();
     void resetNewData();
     bool getNewData();
-    void normalize();
 
     void resetFIFO();
 

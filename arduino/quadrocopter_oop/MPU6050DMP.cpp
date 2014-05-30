@@ -103,6 +103,14 @@ double *MPU6050DMP::getAngularVelocityXYZ()
     return(tdouble);
 }
 
+double *MPU6050DMP::getQuaternion()
+{
+    for (int i = 0; i < 4; ++i) {
+        quat[i] = q.toVector4D()[i];
+    }
+    return quat;
+}
+
 //double *MPU6050DMP::getAccelXYZ()
 //{
 //    tdouble[0] = acc[0];
@@ -288,9 +296,9 @@ void MPU6050DMP::iteration(double dt)
     QVector<int> x = brick->gyroscope()->read();
 #endif
 
-    av.x = x[0] / gyroMulConstRad * dt;
-    av.y = x[1] / gyroMulConstRad * dt;
-    av.z = x[2] / gyroMulConstRad * dt;
+    av.x = x[1] / gyroMulConstRad * dt;
+    av.y = x[2] / gyroMulConstRad * dt;
+    av.z = x[0] / gyroMulConstRad * dt;
 
     dcm.rotate(av);
 

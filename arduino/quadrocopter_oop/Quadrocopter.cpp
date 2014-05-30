@@ -111,14 +111,14 @@ void Quadrocopter::reset()
 
     pidAngleX.reset();
     pidAngleX.setYMinYMax(angleMaxCorrection);
-    pidAngleX.setKpKiKd(1, 0.5, 0);
+    pidAngleX.setKpKiKd(0.5, 0.2, 0);
     pidAngleX.setPMinMax(100.0);
     pidAngleX.setIMinMax(100.0);
     pidAngleX.setDMinMax(100.0);
 
     pidAngleY.reset();
     pidAngleY.setYMinYMax(angleMaxCorrection);
-    pidAngleY.setKpKiKd(1, 0.5, 0);
+    pidAngleY.setKpKiKd(0.45, 0.2, 0);
     pidAngleY.setPMinMax(100.0);
     pidAngleY.setIMinMax(100.0);
     pidAngleY.setDMinMax(100.0);
@@ -147,9 +147,9 @@ void Quadrocopter::processCorrection()
 
     switch(reactionType)
     {
-    //    case ReactionAngularVelocity:
-    //        torqueAutomaticCorrection = getAngularVelocityCorrection(angularVelocity, DeltaT.getTimeDifferenceSeconds());
-    //        break;
+//        case ReactionAngularVelocity:
+//            torqueAutomaticCorrection = getAngularVelocityCorrection(angularVelocity, DeltaT.getTimeDifferenceSeconds());
+//            break;
 
     //    case ReactionAcceleration:
     //        torqueAutomaticCorrection = getAccelerationCorrection(angle, accelDataRaw);
@@ -208,7 +208,7 @@ void Quadrocopter::iteration()
         MyMPU->iteration(dt);
         processSensorsData();
 #ifdef LOG
-        double * temp = MyMPU->getAngleXYZ();
+        double * temp = MyMPU->getQuaternion();
         QVector<int> tmp = controller->gyroscope()->read();
         for(int i = 0; i < 4; i++)
         {
@@ -216,9 +216,9 @@ void Quadrocopter::iteration()
             logMessage.append("\t");
         }
         logMessage.append("\n");
-        for(int i = 0; i < DIM; i++)
+        for(int i = 0; i < 4; i++)
         {
-            logMessage.append(QString::number(temp[i], 'f', 6));
+            logMessage.append(QString::number(temp[3 - i], 'f', 6));
             logMessage.append("\t");
         }
         logMessage.append("\n");

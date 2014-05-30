@@ -24,6 +24,7 @@ arduino/quadrocopter_oop/quadrocopter_oop
 arduino/quadrocopter_oop/KalmanFilter.cpp
 arduino/quadrocopter_oop/KalmanFilter.h
 arduino/quadrocopter_oop/*.sh
+arduino/quadrocopter_oop/moc_*
 
 *.autosave
 *~
